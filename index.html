@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .search-box, .filter-select, .file-input-wrapper {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .search-box, .filter-select {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus, .filter-select:focus {
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .file-input-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .recipe-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .recipe-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .recipe-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .recipe-title {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .recipe-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .tag {
+            padding: 5px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        
+        .recipe-detail {
+            display: none;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .recipe-detail.active {
+            display: block;
+        }
+        
+        .close-btn {
+            float: right;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .recipe-detail h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .recipe-section {
+            margin: 30px 0;
+        }
+        
+        .recipe-section h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        .ingredients-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .ingredients-table th {
+            text-align: left;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .ingredients-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .ingredients-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .instructions {
+            counter-reset: step-counter;
+        }
+        
+        .instructions li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 20px;
+            list-style: none;
+        }
+        
+        .instructions li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .no-recipes {
+            text-align: center;
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .recipe-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .recipe-detail {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Recipe Collection</h1>
+            <p class="subtitle">Load your recipe file to get started</p>
+        </header>
+        
+        <div class="controls">
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" accept=".txt">
+                <label for="fileInput" class="file-input-label">📁 Load Recipe File</label>
+            </div>
+            <input type="text" class="search-box" placeholder="Search recipes..." id="searchInput" disabled>
+            <select class="filter-select" id="categoryFilter" disabled>
+                <option value="">All Categories</option>
+            </select>
+            <select class="filter-select" id="typeFilter" disabled>
+                <option value="">All Types</option>
+            </select>
+        </div>
+        
+        <div class="recipe-detail" id="recipeDetail"></div>
+        
+        <div id="recipeGrid">
+            <div class="loading">
+                <p>📋 Please load a recipe file to display recipes</p>
+                <p style="font-size: 0.9em; margin-top: 10px;">Supported format: .txt file with recipe structure</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let recipes = [];
+        let filteredRecipes = [];
+        let allCategories = new Set();
+        let allTypes = new Set();
+        
+        // Recipe parser function
+        function parseRecipeFile(content) {
+            const recipes = [];
+            const lines = content.split('\n');
+            
+            let currentRecipe = null;
+            let inIngredients = false;
+            let inInstructions = false;
+            let instructionBuffer = '';
+            let instructionNumber = 1;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // Skip empty lines
+                if (!line) {
+                    if (instructionBuffer && currentRecipe) {
+                        // Save buffered instruction
+                        currentRecipe.instructions.push(instructionBuffer.trim());
+                        instructionBuffer = '';
+                        instructionNumber++;
+                    }
+                    continue;
+                }
+                
+                // Check for recipe name (starts with ### or is a header line after a section number)
+                if (line.startsWith('###') || (lines[i-1] && /^\d+\.\d+/.test(lines[i-1]) && !line.includes('|') && !line.startsWith('Ingredients'))) {
+                    // Save previous recipe if exists
+                    if (currentRecipe && currentRecipe.name) {
+                        recipes.push(currentRecipe);
+                    }
+                    
+                    // Extract recipe name and tags
+                    const nameMatch = line.replace(/^###\s*/, '').match(/^([^:]+)(?:\s+([^:]+):?(.*))?$/);
+                    if (nameMatch) {
+                        const name = nameMatch[1].trim();
+                        const tags = line.toLowerCase().match(/\b(american|asian|swedish|italian|mexican|indian|french|chicken|beef|pork|tofu|sauce|soup|salad|breakfast)\b/g) || [];
+                        
+                        currentRecipe = {
+                            name: name,
+                            category: tags.filter(t => ['american', 'asian', 'swedish', 'italian', 'mexican', 'indian', 'french'].includes(t)),
+                            type: tags.filter(t => ['chicken', 'beef', 'pork', 'tofu', 'sauce', 'soup', 'salad', 'breakfast'].includes(t)),
+                            ingredients: [],
+                            instructions: []
+                        };
+                        
+                        inIngredients = false;
+                        inInstructions = false;
+                        instructionBuffer = '';
+                        instructionNumber = 1;
+                    }
+                }
+                
+                // Check for ingredients header
+                else if (line.toLowerCase().includes('ingredients') && line.toLowerCase().includes('amount')) {
+                    inIngredients = true;
+                    inInstructions = false;
+                }
+                
+                // Parse ingredient line (has pipes)
+                else if (inIngredients && line.includes('|') && currentRecipe) {
+                    const parts = line.split('|').map(p => p.trim());
+                    if (parts.length >= 3 && !parts[0].toLowerCase().includes('ingredients')) {
+                        currentRecipe.ingredients.push({
+                            item: parts[0],
+                            amount: parts[1],
+                            unit: parts[2] || ''
+                        });
+                    }
+                }
+                
+                // Check if we're starting instructions (numbered lines)
+                else if (/^\d+\./.test(line) && currentRecipe) {
+                    inIngredients = false;
+                    inInstructions = true;
+                    
+                    // Save previous instruction if exists
+                    if (instructionBuffer) {
+                        currentRecipe.instructions.push(instructionBuffer.trim());
+                        instructionBuffer = '';
+                    }
+                    
+                    // Start new instruction
+                    instructionBuffer = line.replace(/^\d+\.\s*/, '');
+                }
+                
+                // Continue instruction on next line if it doesn't start with a number
+                else if (inInstructions && !/^\d+\./.test(line) && !line.toLowerCase().includes('ingredients')) {
+                    instructionBuffer += ' ' + line;
+                }
+            }
+            
+            // Save last instruction if exists
+            if (instructionBuffer && currentRecipe) {
+                currentRecipe.instructions.push(instructionBuffer.trim());
+            }
+            
+            // Save last recipe
+            if (currentRecipe && currentRecipe.name) {
+                recipes.push(currentRecipe);
+            }
+            
+            return recipes;
+        }
+        
+        // Function to display recipes
+        function displayRecipes(recipesToShow) {
+            const grid = document.getElementById('recipeGrid');
+            grid.innerHTML = '';
+            
+            if (recipesToShow.length === 0) {
+                grid.innerHTML = '<div class="no-recipes">No recipes found matching your criteria.</div>';
+                return;
+            }
+            
+            recipesToShow.forEach((recipe, index) => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+                card.onclick = () => showRecipeDetail(index);
+                
+                const tags = [...new Set([...recipe.category, ...recipe.type])];
+                
+                card.innerHTML = `
+                    <h3 class="recipe-title">${recipe.name}</h3>
+                    <p>${recipe.ingredients.length} ingredients • ${recipe.instructions.length} steps</p>
+                    <div class="recipe-tags">
+                        ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+        
+        // Function to show recipe detail
+        function showRecipeDetail(index) {
+            const recipe = filteredRecipes[index];
+            const detail = document.getElementById('recipeDetail');
+            
+            const ingredientsHTML = recipe.ingredients.map(ing => 
+                `<tr>
+                    <td>${ing.item}</td>
+                    <td>${ing.amount}</td>
+                    <td>${ing.unit}</td>
+                </tr>`
+            ).join('');
+            
+            const instructionsHTML = recipe.instructions.map(inst => 
+                `<li>${inst}</li>`
+            ).join('');
+            
+            detail.innerHTML = `
+                <button class="close-btn" onclick="closeRecipeDetail()">Close</button>
+                <h2>${recipe.name}</h2>
+                
+                <div class="recipe-section">
+                    <h3>Ingredients</h3>
+                    <table class="ingredients-table">
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Amount</th>
+                                <th>Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${ingredientsHTML}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="recipe-section">
+                    <h3>Instructions</h3>
+                    <ol class="instructions">
+                        ${instructionsHTML}
+                    </ol>
+                </div>
+            `;
+            
+            detail.classList.add('active');
+            detail.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Function to close recipe detail
+        function closeRecipeDetail() {
+            const detail = document.getElementById('recipeDetail');
+            detail.classList.remove('active');
+        }
+        
+        // Update filter dropdowns
+        function updateFilters() {
+            const categorySelect = document.getElementById('categoryFilter');
+            const typeSelect = document.getElementById('typeFilter');
+            
+            // Clear existing options except "All"
+            categorySelect.innerHTML = '<option value="">All Categories</option>';
+            typeSelect.innerHTML = '<option value="">All Types</option>';
+            
+            // Add categories
+            Array.from(allCategories).sort().forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+                categorySelect.appendChild(option);
+            });
+            
+            // Add types
+            Array.from(allTypes).sort().forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                typeSelect.appendChild(option);
+            });
+        }
+        
+        // Filter function
+        function filterRecipes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            
+            filteredRecipes = recipes.filter(recipe => {
+                const matchesSearch = recipe.name.toLowerCase().includes(searchTerm) ||
+                                     recipe.ingredients.some(ing => ing.item.toLowerCase().includes(searchTerm));
+                const matchesCategory = !categoryFilter || recipe.category.includes(categoryFilter);
+                const matchesType = !typeFilter || recipe.type.includes(typeFilter);
+                
+                return matchesSearch && matchesCategory && matchesType;
+            });
+            
+            displayRecipes(filteredRecipes);
+        }
+        
+        // File input handler
+        document.getElementById('fileInput').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            try {
+                const content = await file.text();
+                recipes = parseRecipeFile(content);
+                
+                // Collect all categories and types
+                allCategories.clear();
+                allTypes.clear();
+                recipes.forEach(recipe => {
+                    recipe.category.forEach(cat => allCategories.add(cat));
+                    recipe.type.forEach(type => allTypes.add(type));
+                });
+                
+                // Update UI
+                updateFilters();
+                filteredRecipes = [...recipes];
+                displayRecipes(filteredRecipes);
+                
+                // Enable controls
+                document.getElementById('searchInput').disabled = false;
+                document.getElementById('categoryFilter').disabled = false;
+                document.getElementById('typeFilter').disabled = false;
+                
+                // Update subtitle
+                document.querySelector('.subtitle').textContent = `${recipes.length} recipes loaded • ${file.name}`;
+                
+            } catch (error) {
+                document.getElementById('recipeGrid').innerHTML = `
+                    <div class="error">
+                        <p><strong>Error loading file:</strong> ${error.message}</p>
+                        <p>Please make sure your file follows the correct format.</p>
+                    </div>
+                `;
+            }
+        });
+        
+        // Event listeners for filters
+        document.getElementById('searchInput').addEventListener('input', filterRecipes);
+        document.getElementById('categoryFilter').addEventListener('change', filterRecipes);
+        document.getElementById('typeFilter').addEventListener('change', filterRecipes);
+        
+        // Load from URL parameter (for GitHub Pages deployment)
+        const urlParams = new URLSearchParams(window.location.search);
+        const recipeFileUrl = urlParams.get('file') || 'recipes.txt';
+        
+        // Try to auto-load recipes.txt if it exists
+        if (window.location.protocol !== 'file:') {
+            fetch(recipeFileUrl)
+                .then(response => response.text())
+                .then(content => {
+                    recipes = parseRecipeFile(content);
+                    
+                    // Collect all categories and types
+                    allCategories.clear();
+                    allTypes.clear();
+                    recipes.forEach(recipe => {
+                        recipe.category.forEach(cat => allCategories.add(cat));
+                        recipe.type.forEach(type => allTypes.add(type));
+                    });
+                    
+                    updateFilters();
+                    filteredRecipes = [...recipes];
+                    displayRecipes(filteredRecipes);
+                    
+                    // Enable controls
+                    document.getElementById('searchInput').disabled = false;
+                    document.getElementById('categoryFilter').disabled = false;
+                    document.getElementById('typeFilter').disabled = false;
+                    
+                    document.querySelector('.subtitle').textContent = `${recipes.length} recipes loaded`;
+                })
+                .catch(() => {
+                    console.log('No default recipes.txt file found. User can load their own file.');
+                });
+        }
+    </script>
+</body>
+</html>

@@ -595,6 +595,9 @@
         
         // Show cocktail detail
         function showCocktailDetail(index) {
+            // Set page title to recipe name for unique discussion
+            const originalTitle = document.title;
+            document.title = `${cocktail.name} - Cocktail`
             const cocktail = filteredCocktails[index];
             const detail = document.getElementById('cocktailDetail');
             
@@ -647,6 +650,8 @@
         function closeCocktailDetail() {
             const detail = document.getElementById('cocktailDetail');
             detail.classList.remove('active');
+            // Restore original page title
+            document.title = 'Cocktail Collection - Pierre & Adam';
         }
         
         // Update filter dropdowns

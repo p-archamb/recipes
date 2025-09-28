@@ -600,12 +600,15 @@
             });
         }
         
-        // Function to show recipe detail
         function showRecipeDetail(index) {
             const recipe = filteredRecipes[index];
+            
+            // Set page title to recipe name for unique discussion
+            document.title = `${recipe.name} - Recipe`;
+            
             const detail = document.getElementById('recipeDetail');
             
-            const ingredientsHTML = recipe.ingredients.map(ing => 
+            const ingredientsHTML = recipe.ingredients.map(ing =>
                 `<tr>
                     <td>${ing.item}</td>
                     <td>${ing.amount}</td>
@@ -613,7 +616,7 @@
                 </tr>`
             ).join('');
             
-            const instructionsHTML = recipe.instructions.map(inst => 
+            const instructionsHTML = recipe.instructions.map(inst =>
                 `<li>${inst}</li>`
             ).join('');
             
@@ -644,6 +647,25 @@
                         ${instructionsHTML}
                     </ol>
                 </div>
+                
+                <div class="recipe-section">
+                    <h3>Discussion</h3>
+                    <script src="https://giscus.app/client.js"
+                            data-repo="p-archamb/recipes"
+                            data-repo-id="R_kgDOP3y3hA"
+                            data-category="General"
+                            data-category-id="DIC_kwDOP3y3hM4CwAVj"
+                            data-mapping="title"
+                            data-strict="1"
+                            data-reactions-enabled="1"
+                            data-emit-metadata="0"
+                            data-input-position="bottom"
+                            data-theme="preferred_color_scheme"
+                            data-lang="en"
+                            crossorigin="anonymous"
+                            async>
+                    <\/script>
+                </div>
             `;
             
             detail.classList.add('active');
@@ -654,6 +676,8 @@
         function closeRecipeDetail() {
             const detail = document.getElementById('recipeDetail');
             detail.classList.remove('active');
+            // Restore original page title
+            document.title = 'Recipe Collection - Pierre & Adam';
         }
         
         // Update filter dropdowns
@@ -867,5 +891,25 @@
             setTimeout(loadAllRecipes, 100);
         }
     </script>
+    <!-- ADD THE COMMENTS SECTION HERE - INSIDE THE CONTAINER -->
+    <div style="margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.95); border-radius: 20px;">
+        <h2 style="margin-bottom: 20px;">Discussion</h2>
+        <script src="https://giscus.app/client.js"
+                data-repo="p-archamb/recipes"
+                data-repo-id="R_kgDOP3y3hA"
+                data-category="General"
+                data-category-id="DIC_kwDOP3y3hM4CwAVj"
+                data-mapping="title"
+                data-strict="1"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="preferred_color_scheme"
+                data-lang="en"
+                crossorigin="anonymous"
+                async>
+        </script>
+    </div>
+    
 </body>
 </html>

@@ -670,6 +670,29 @@
             
             detail.classList.add('active');
             detail.scrollIntoView({ behavior: 'smooth' });
+            // Reload Giscus for this recipe
+            const existingScript = document.querySelector('script[src*="giscus.app"]');
+            if (existingScript) {
+                existingScript.remove();
+            }
+
+            const newScript = document.createElement('script');
+            newScript.src = 'https://giscus.app/client.js';
+            newScript.setAttribute('data-repo', 'p-archamb/recipes');
+            newScript.setAttribute('data-repo-id', 'R_kgDOP3y3hA');
+            newScript.setAttribute('data-category', 'General');
+            newScript.setAttribute('data-category-id', 'DIC_kwDOP3y3hM4CwAVj');
+            newScript.setAttribute('data-mapping', 'title');
+            newScript.setAttribute('data-strict', '1');
+            newScript.setAttribute('data-reactions-enabled', '1');
+            newScript.setAttribute('data-emit-metadata', '0');
+            newScript.setAttribute('data-input-position', 'bottom');
+            newScript.setAttribute('data-theme', 'preferred_color_scheme');
+            newScript.setAttribute('data-lang', 'en');
+            newScript.setAttribute('crossorigin', 'anonymous');
+            newScript.async = true;
+
+            document.body.appendChild(newScript);
         }
         
         // Function to close recipe detail
@@ -678,6 +701,29 @@
             detail.classList.remove('active');
             // Restore original page title
             document.title = 'Recipe Collection - Pierre & Adam';
+            // Reload Giscus for this recipe
+            const existingScript = document.querySelector('script[src*="giscus.app"]');
+            if (existingScript) {
+                existingScript.remove();
+            }
+
+            const newScript = document.createElement('script');
+            newScript.src = 'https://giscus.app/client.js';
+            newScript.setAttribute('data-repo', 'p-archamb/recipes');
+            newScript.setAttribute('data-repo-id', 'R_kgDOP3y3hA');
+            newScript.setAttribute('data-category', 'General');
+            newScript.setAttribute('data-category-id', 'DIC_kwDOP3y3hM4CwAVj');
+            newScript.setAttribute('data-mapping', 'title');
+            newScript.setAttribute('data-strict', '1');
+            newScript.setAttribute('data-reactions-enabled', '1');
+            newScript.setAttribute('data-emit-metadata', '0');
+            newScript.setAttribute('data-input-position', 'bottom');
+            newScript.setAttribute('data-theme', 'preferred_color_scheme');
+            newScript.setAttribute('data-lang', 'en');
+            newScript.setAttribute('crossorigin', 'anonymous');
+            newScript.async = true;
+
+            document.body.appendChild(newScript);
         }
         
         // Update filter dropdowns

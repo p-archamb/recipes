@@ -26,6 +26,15 @@ Another ingredient | 2 | Tbsp
 
 You can use multiple tags: `### Beef Tacos mexican:beef:sauce`
 
+### Cocktail Title Line
+
+Same format as recipes: ### Cocktail Name type:spirit
+Example: ### Old Fashioned classic:whiskey
+
+Available Cocktail Types: classic, modern, tiki, sour, fizz, martini, highball, punch, shot, frozen, hot
+Available Spirits: vodka, gin, rum, whiskey, bourbon, tequila, mezcal, brandy, wine, champagne, beer
+You can use multiple tags: ### Long Island Iced Tea modern:vodka:gin:rum:tequila
+
 ### Ingredients Section
 - **Header line:** Must contain the words "Ingredients", "Amount", and "Unit" separated by pipes
 - **Format each ingredient:** `Ingredient name | Amount | Unit`
@@ -107,6 +116,5 @@ Salt | for pasta water |
 7. Season with black pepper and serve immediately with remaining cheese.
 ```
 
----
 
 **Remember:** The format is flexible for amounts and units, but the structure (###, pipes, numbered steps) must be followed exactly for the parser to work correctly.

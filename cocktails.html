@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Collection - Pierre & Adam</title>
+    <title>Cocktail Collection - Pierre & Adam</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -37,7 +37,7 @@
             color: #333;
             font-size: 2.5em;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -46,6 +46,23 @@
         .subtitle {
             color: #666;
             font-size: 1.1em;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
         .loading {
@@ -112,7 +129,7 @@
         }
         
         .author-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
             border-color: transparent;
         }
@@ -131,7 +148,7 @@
         .file-input-label {
             display: block;
             padding: 12px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
             border-radius: 50px;
             cursor: pointer;
@@ -144,17 +161,17 @@
         
         .file-input-label:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 15px 40px rgba(44, 62, 80, 0.3);
         }
         
-        .recipe-grid {
+        .cocktail-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
         
-        .recipe-card {
+        .cocktail-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 15px;
@@ -166,46 +183,46 @@
             overflow: hidden;
         }
         
-        .recipe-card::before {
+        .cocktail-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #2c3e50 0%, #34495e 100%);
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
         
-        .recipe-card:hover {
+        .cocktail-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
         
-        .recipe-card:hover::before {
+        .cocktail-card:hover::before {
             transform: scaleX(1);
         }
         
-        .recipe-title {
+        .cocktail-title {
             font-size: 1.4em;
             color: #333;
             margin-bottom: 10px;
             font-weight: 600;
         }
         
-        .recipe-author {
+        .cocktail-author {
             display: inline-block;
             padding: 3px 10px;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            background: rgba(44, 62, 80, 0.1);
+            color: #2c3e50;
             border-radius: 12px;
             font-size: 0.85em;
             font-weight: 500;
             margin-bottom: 10px;
         }
         
-        .recipe-tags {
+        .cocktail-tags {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
@@ -214,14 +231,14 @@
         
         .tag {
             padding: 5px 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
             border-radius: 20px;
             font-size: 0.85em;
             font-weight: 500;
         }
         
-        .recipe-detail {
+        .cocktail-detail {
             display: none;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
@@ -243,13 +260,13 @@
             }
         }
         
-        .recipe-detail.active {
+        .cocktail-detail.active {
             display: block;
         }
         
         .close-btn {
             float: right;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -262,24 +279,24 @@
         
         .close-btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
         }
         
-        .recipe-detail h2 {
+        .cocktail-detail h2 {
             color: #333;
             margin-bottom: 10px;
             font-size: 2em;
         }
         
-        .recipe-detail .recipe-author {
+        .cocktail-detail .cocktail-author {
             margin-bottom: 20px;
         }
         
-        .recipe-section {
+        .cocktail-section {
             margin: 30px 0;
         }
         
-        .recipe-section h3 {
+        .cocktail-section h3 {
             color: #555;
             margin-bottom: 15px;
             font-size: 1.3em;
@@ -296,7 +313,7 @@
         .ingredients-table th {
             text-align: left;
             padding: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
             font-weight: 600;
         }
@@ -327,7 +344,7 @@
             position: absolute;
             left: 0;
             top: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
             width: 35px;
             height: 35px;
@@ -338,7 +355,7 @@
             font-weight: bold;
         }
         
-        .no-recipes {
+        .no-cocktails {
             text-align: center;
             padding: 60px;
             background: rgba(255, 255, 255, 0.95);
@@ -371,7 +388,7 @@
         }
         
         @media (max-width: 768px) {
-            .recipe-grid {
+            .cocktail-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -379,7 +396,7 @@
                 font-size: 2em;
             }
             
-            .recipe-detail {
+            .cocktail-detail {
                 padding: 20px;
             }
             
@@ -387,58 +404,41 @@
                 flex-direction: column;
             }
         }
-
-        .nav-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 20px;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 20px;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-        }
-
-        .nav-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Recipe Collection</h1>
-            <p class="subtitle">Pierre & Adam's Kitchen</p>
-            <a href="cocktails.html" class="nav-link">View Cocktail Collection →</a>
+            <h1>Cocktail Collection</h1>
+            <p class="subtitle">Pierre & Adam's Bar</p>
+            <a href="index.html" class="nav-link">← Back to Recipes</a>
         </header>
         
         <div class="controls">
             <div class="author-buttons">
-                <button class="author-btn" id="pierreBtn" onclick="loadAuthorRecipes('pierre')">
-                    Pierre's Recipes
+                <button class="author-btn" id="pierreBtn" onclick="loadAuthorCocktails('pierre')">
+                    Pierre's Cocktails
                 </button>
-                <button class="author-btn" id="adamBtn" onclick="loadAuthorRecipes('adam')">
-                    Adams's Recipes
+                <button class="author-btn" id="adamBtn" onclick="loadAuthorCocktails('adam')">
+                    Adam's Cocktails
                 </button>
-                <button class="author-btn" id="allBtn" onclick="loadAllRecipes()">
-                    👥 All Recipes
+                <button class="author-btn" id="allBtn" onclick="loadAllCocktails()">
+                    All Cocktails
                 </button>
             </div>
             <div class="file-input-wrapper">
                 <input type="file" id="fileInput" accept=".txt">
-                <label for="fileInput" class="file-input-label">📁 Load Custom File</label>
+                <label for="fileInput" class="file-input-label">Load Custom File</label>
             </div>
         </div>
         
         <div class="controls">
-            <input type="text" class="search-box" placeholder="Search recipes..." id="searchInput">
-            <select class="filter-select" id="categoryFilter">
-                <option value="">All Categories</option>
-            </select>
+            <input type="text" class="search-box" placeholder="Search cocktails..." id="searchInput">
             <select class="filter-select" id="typeFilter">
                 <option value="">All Types</option>
+            </select>
+            <select class="filter-select" id="spiritFilter">
+                <option value="">All Spirits</option>
             </select>
             <select class="filter-select" id="authorFilter">
                 <option value="">All Authors</option>
@@ -447,75 +447,71 @@
             </select>
         </div>
         
-        <div class="recipe-detail" id="recipeDetail"></div>
+        <div class="cocktail-detail" id="cocktailDetail"></div>
         
-        <div id="recipeGrid">
+        <div id="cocktailGrid">
             <div class="loading">
-                <p>📋 Click on an author's name above to load their recipes</p>
-                <p style="font-size: 0.9em; margin-top: 10px;">Or load a custom recipe file</p>
+                <p>Click on an author's name above to load their cocktails</p>
+                <p style="font-size: 0.9em; margin-top: 10px;">Or load a custom cocktail file</p>
             </div>
         </div>
     </div>
     
     <script>
-        let allRecipes = [];
-        let filteredRecipes = [];
-        let allCategories = new Set();
+        let allCocktails = [];
+        let filteredCocktails = [];
         let allTypes = new Set();
+        let allSpirits = new Set();
         let currentAuthors = new Set();
         
-        // Recipe parser function - now includes author
-        function parseRecipeFile(content, author) {
-            const recipes = [];
+        // Cocktail parser function - similar to recipe parser but adapted for cocktails
+        function parseCocktailFile(content, author) {
+            const cocktails = [];
             const lines = content.split('\n');
             
-            let currentRecipe = null;
+            let currentCocktail = null;
             let inIngredients = false;
             let inInstructions = false;
             let instructionBuffer = '';
-            let instructionNumber = 1;
             
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
                 
                 // Skip empty lines
                 if (!line) {
-                    if (instructionBuffer && currentRecipe) {
-                        // Save buffered instruction
-                        currentRecipe.instructions.push(instructionBuffer.trim());
+                    if (instructionBuffer && currentCocktail) {
+                        currentCocktail.instructions.push(instructionBuffer.trim());
                         instructionBuffer = '';
-                        instructionNumber++;
                     }
                     continue;
                 }
                 
-                // Check for recipe name
-                if (line.startsWith('###') || (lines[i-1] && /^\d+\.\d+/.test(lines[i-1]) && !line.includes('|') && !line.startsWith('Ingredients'))) {
-                    // Save previous recipe if exists
-                    if (currentRecipe && currentRecipe.name) {
-                        recipes.push(currentRecipe);
+                // Check for cocktail name (starts with ###)
+                if (line.startsWith('###')) {
+                    // Save previous cocktail if exists
+                    if (currentCocktail && currentCocktail.name) {
+                        cocktails.push(currentCocktail);
                     }
                     
-                    // Extract recipe name and tags
-                    const nameMatch = line.replace(/^###\s*/, '').match(/^([^:]+)(?:\s+([^:]+):?(.*))?$/);
-                    if (nameMatch) {
-                        const name = nameMatch[1].trim();
-                        const tags = line.toLowerCase().match(/\b(american|asian|swedish|italian|mexican|indian|french|chicken|beef|pork|tofu|sauce|soup|salad|breakfast)\b/g) || [];
-                        
-                        currentRecipe = {
-                            name: name,
-                            author: author,
-                            category: tags.filter(t => ['american', 'asian', 'swedish', 'italian', 'mexican', 'indian', 'french'].includes(t)),
-                            type: tags.filter(t => ['chicken', 'beef', 'pork', 'tofu', 'sauce', 'soup', 'salad', 'breakfast'].includes(t)),
-                            ingredients: [],
-                            instructions: []
-                        };
-                        
-                        inIngredients = false;
-                        inInstructions = false;
-                        instructionBuffer = '';
-                        instructionNumber = 1;
-                    }
+                    // Extract cocktail name and tags
+                    const nameMatch = line.replace(/^###\s*/, '');
+                    const name = nameMatch.split(':')[0].trim();
+                    
+                    // Common cocktail tags
+                    const tags = line.toLowerCase().match(/\b(classic|modern|tiki|sour|fizz|martini|old-fashioned|highball|punch|shot|frozen|hot|vodka|gin|rum|whiskey|bourbon|tequila|mezcal|brandy|wine|champagne|beer)\b/g) || [];
+                    
+                    currentCocktail = {
+                        name: name,
+                        author: author,
+                        type: tags.filter(t => ['classic', 'modern', 'tiki', 'sour', 'fizz', 'martini', 'old-fashioned', 'highball', 'punch', 'shot', 'frozen', 'hot'].includes(t)),
+                        spirit: tags.filter(t => ['vodka', 'gin', 'rum', 'whiskey', 'bourbon', 'tequila', 'mezcal', 'brandy', 'wine', 'champagne', 'beer'].includes(t)),
+                        ingredients: [],
+                        instructions: []
+                    };
+                    
+                    inIngredients = false;
+                    inInstructions = false;
+                    instructionBuffer = '';
                 }
                 
                 // Check for ingredients header
@@ -525,10 +521,10 @@
                 }
                 
                 // Parse ingredient line
-                else if (inIngredients && line.includes('|') && currentRecipe) {
+                else if (inIngredients && line.includes('|') && currentCocktail) {
                     const parts = line.split('|').map(p => p.trim());
                     if (parts.length >= 3 && !parts[0].toLowerCase().includes('ingredients')) {
-                        currentRecipe.ingredients.push({
+                        currentCocktail.ingredients.push({
                             item: parts[0],
                             amount: parts[1],
                             unit: parts[2] || ''
@@ -537,17 +533,15 @@
                 }
                 
                 // Check if we're starting instructions
-                else if (/^\d+\./.test(line) && currentRecipe) {
+                else if (/^\d+\./.test(line) && currentCocktail) {
                     inIngredients = false;
                     inInstructions = true;
                     
-                    // Save previous instruction if exists
                     if (instructionBuffer) {
-                        currentRecipe.instructions.push(instructionBuffer.trim());
+                        currentCocktail.instructions.push(instructionBuffer.trim());
                         instructionBuffer = '';
                     }
                     
-                    // Start new instruction
                     instructionBuffer = line.replace(/^\d+\.\s*/, '');
                 }
                 
@@ -557,41 +551,40 @@
                 }
             }
             
-            // Save last instruction if exists
-            if (instructionBuffer && currentRecipe) {
-                currentRecipe.instructions.push(instructionBuffer.trim());
+            // Save last instruction and cocktail
+            if (instructionBuffer && currentCocktail) {
+                currentCocktail.instructions.push(instructionBuffer.trim());
             }
             
-            // Save last recipe
-            if (currentRecipe && currentRecipe.name) {
-                recipes.push(currentRecipe);
+            if (currentCocktail && currentCocktail.name) {
+                cocktails.push(currentCocktail);
             }
             
-            return recipes;
+            return cocktails;
         }
         
-        // Function to display recipes
-        function displayRecipes(recipesToShow) {
-            const grid = document.getElementById('recipeGrid');
+        // Display cocktails
+        function displayCocktails(cocktailsToShow) {
+            const grid = document.getElementById('cocktailGrid');
             grid.innerHTML = '';
             
-            if (recipesToShow.length === 0) {
-                grid.innerHTML = '<div class="no-recipes">No recipes found matching your criteria.</div>';
+            if (cocktailsToShow.length === 0) {
+                grid.innerHTML = '<div class="no-cocktails">No cocktails found matching your criteria.</div>';
                 return;
             }
             
-            recipesToShow.forEach((recipe, index) => {
+            cocktailsToShow.forEach((cocktail, index) => {
                 const card = document.createElement('div');
-                card.className = 'recipe-card';
-                card.onclick = () => showRecipeDetail(recipesToShow.indexOf(recipe));
+                card.className = 'cocktail-card';
+                card.onclick = () => showCocktailDetail(cocktailsToShow.indexOf(cocktail));
                 
-                const tags = [...new Set([...recipe.category, ...recipe.type])];
+                const tags = [...new Set([...cocktail.type, ...cocktail.spirit])];
                 
                 card.innerHTML = `
-                    <h3 class="recipe-title">${recipe.name}</h3>
-                    <span class="recipe-author">${recipe.author}</span>
-                    <p>${recipe.ingredients.length} ingredients • ${recipe.instructions.length} steps</p>
-                    <div class="recipe-tags">
+                    <h3 class="cocktail-title">${cocktail.name}</h3>
+                    <span class="cocktail-author">${cocktail.author}</span>
+                    <p>${cocktail.ingredients.length} ingredients • ${cocktail.instructions.length} steps</p>
+                    <div class="cocktail-tags">
                         ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
                 `;
@@ -600,12 +593,12 @@
             });
         }
         
-        // Function to show recipe detail
-        function showRecipeDetail(index) {
-            const recipe = filteredRecipes[index];
-            const detail = document.getElementById('recipeDetail');
+        // Show cocktail detail
+        function showCocktailDetail(index) {
+            const cocktail = filteredCocktails[index];
+            const detail = document.getElementById('cocktailDetail');
             
-            const ingredientsHTML = recipe.ingredients.map(ing => 
+            const ingredientsHTML = cocktail.ingredients.map(ing => 
                 `<tr>
                     <td>${ing.item}</td>
                     <td>${ing.amount}</td>
@@ -613,16 +606,16 @@
                 </tr>`
             ).join('');
             
-            const instructionsHTML = recipe.instructions.map(inst => 
+            const instructionsHTML = cocktail.instructions.map(inst => 
                 `<li>${inst}</li>`
             ).join('');
             
             detail.innerHTML = `
-                <button class="close-btn" onclick="closeRecipeDetail()">Close</button>
-                <h2>${recipe.name}</h2>
-                <span class="recipe-author">By ${recipe.author}</span>
+                <button class="close-btn" onclick="closeCocktailDetail()">Close</button>
+                <h2>${cocktail.name}</h2>
+                <span class="cocktail-author">By ${cocktail.author}</span>
                 
-                <div class="recipe-section">
+                <div class="cocktail-section">
                     <h3>Ingredients</h3>
                     <table class="ingredients-table">
                         <thead>
@@ -638,7 +631,7 @@
                     </table>
                 </div>
                 
-                <div class="recipe-section">
+                <div class="cocktail-section">
                     <h3>Instructions</h3>
                     <ol class="instructions">
                         ${instructionsHTML}
@@ -650,103 +643,95 @@
             detail.scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Function to close recipe detail
-        function closeRecipeDetail() {
-            const detail = document.getElementById('recipeDetail');
+        // Close cocktail detail
+        function closeCocktailDetail() {
+            const detail = document.getElementById('cocktailDetail');
             detail.classList.remove('active');
         }
         
         // Update filter dropdowns
         function updateFilters() {
-            const categorySelect = document.getElementById('categoryFilter');
             const typeSelect = document.getElementById('typeFilter');
+            const spiritSelect = document.getElementById('spiritFilter');
             
-            // Clear existing options except "All"
-            categorySelect.innerHTML = '<option value="">All Categories</option>';
             typeSelect.innerHTML = '<option value="">All Types</option>';
+            spiritSelect.innerHTML = '<option value="">All Spirits</option>';
             
-            // Add categories
-            Array.from(allCategories).sort().forEach(cat => {
-                const option = document.createElement('option');
-                option.value = cat;
-                option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-                categorySelect.appendChild(option);
-            });
-            
-            // Add types
             Array.from(allTypes).sort().forEach(type => {
                 const option = document.createElement('option');
                 option.value = type;
                 option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
                 typeSelect.appendChild(option);
             });
+            
+            Array.from(allSpirits).sort().forEach(spirit => {
+                const option = document.createElement('option');
+                option.value = spirit;
+                option.textContent = spirit.charAt(0).toUpperCase() + spirit.slice(1);
+                spiritSelect.appendChild(option);
+            });
         }
         
-        // Filter function
-        function filterRecipes() {
+        // Filter cocktails
+        function filterCocktails() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const categoryFilter = document.getElementById('categoryFilter').value;
             const typeFilter = document.getElementById('typeFilter').value;
+            const spiritFilter = document.getElementById('spiritFilter').value;
             const authorFilter = document.getElementById('authorFilter').value;
             
-            filteredRecipes = allRecipes.filter(recipe => {
-                const matchesSearch = recipe.name.toLowerCase().includes(searchTerm) ||
-                                     recipe.ingredients.some(ing => ing.item.toLowerCase().includes(searchTerm));
-                const matchesCategory = !categoryFilter || recipe.category.includes(categoryFilter);
-                const matchesType = !typeFilter || recipe.type.includes(typeFilter);
-                const matchesAuthor = !authorFilter || recipe.author === authorFilter;
+            filteredCocktails = allCocktails.filter(cocktail => {
+                const matchesSearch = cocktail.name.toLowerCase().includes(searchTerm) ||
+                                     cocktail.ingredients.some(ing => ing.item.toLowerCase().includes(searchTerm));
+                const matchesType = !typeFilter || cocktail.type.includes(typeFilter);
+                const matchesSpirit = !spiritFilter || cocktail.spirit.includes(spiritFilter);
+                const matchesAuthor = !authorFilter || cocktail.author === authorFilter;
                 
-                return matchesSearch && matchesCategory && matchesType && matchesAuthor;
+                return matchesSearch && matchesType && matchesSpirit && matchesAuthor;
             });
             
-            displayRecipes(filteredRecipes);
+            displayCocktails(filteredCocktails);
         }
         
-        // Load recipes for a specific author
-        async function loadAuthorRecipes(author) {
-            // Update button states
+        // Load cocktails for specific author
+        async function loadAuthorCocktails(author) {
             document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(author + 'Btn').classList.add('active');
             
-            // Show loading state
             const originalText = document.getElementById(author + 'Btn').innerHTML;
             document.getElementById(author + 'Btn').innerHTML = `Loading...<span class="loading-spinner"></span>`;
             
             try {
-                const response = await fetch(`${author}-recipes.txt`);
+                const response = await fetch(`${author}-cocktails.txt`);
                 if (!response.ok) throw new Error('File not found');
                 
                 const content = await response.text();
                 const authorName = author.charAt(0).toUpperCase() + author.slice(1);
-                const newRecipes = parseRecipeFile(content, authorName);
+                const newCocktails = parseCocktailFile(content, authorName);
                 
-                // Remove recipes from this author and add new ones
-                allRecipes = allRecipes.filter(r => r.author !== authorName);
-                allRecipes.push(...newRecipes);
+                allCocktails = allCocktails.filter(c => c.author !== authorName);
+                allCocktails.push(...newCocktails);
                 
-                // Update categories and types
-                allCategories.clear();
                 allTypes.clear();
+                allSpirits.clear();
                 currentAuthors.clear();
                 
-                allRecipes.forEach(recipe => {
-                    recipe.category.forEach(cat => allCategories.add(cat));
-                    recipe.type.forEach(type => allTypes.add(type));
-                    currentAuthors.add(recipe.author);
+                allCocktails.forEach(cocktail => {
+                    cocktail.type.forEach(type => allTypes.add(type));
+                    cocktail.spirit.forEach(spirit => allSpirits.add(spirit));
+                    currentAuthors.add(cocktail.author);
                 });
                 
                 updateFilters();
-                filteredRecipes = allRecipes.filter(r => r.author === authorName);
-                displayRecipes(filteredRecipes);
+                filteredCocktails = allCocktails.filter(c => c.author === authorName);
+                displayCocktails(filteredCocktails);
                 
-                // Update subtitle
-                document.querySelector('.subtitle').textContent = `${authorName}'s Recipes • ${newRecipes.length} recipes loaded`;
+                document.querySelector('.subtitle').textContent = `${authorName}'s Cocktails • ${newCocktails.length} cocktails loaded`;
                 
             } catch (error) {
-                document.getElementById('recipeGrid').innerHTML = `
+                document.getElementById('cocktailGrid').innerHTML = `
                     <div class="error">
-                        <p><strong>Could not load ${author}-recipes.txt</strong></p>
-                        <p>Make sure the file exists in the same directory as this HTML file.</p>
+                        <p><strong>Could not load ${author}-cocktails.txt</strong></p>
+                        <p>Make sure the file exists in the same directory.</p>
                     </div>
                 `;
             } finally {
@@ -754,58 +739,53 @@
             }
         }
         
-        // Load all recipes from both authors
-        async function loadAllRecipes() {
-            // Update button states
+        // Load all cocktails
+        async function loadAllCocktails() {
             document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('allBtn').classList.add('active');
             
-            // Show loading state
             const originalText = document.getElementById('allBtn').innerHTML;
             document.getElementById('allBtn').innerHTML = `Loading...<span class="loading-spinner"></span>`;
             
-            allRecipes = [];
+            allCocktails = [];
             let loadedCount = 0;
             
-            // Try to load both files
             for (const author of ['pierre', 'adam']) {
                 try {
-                    const response = await fetch(`${author}-recipes.txt`);
+                    const response = await fetch(`${author}-cocktails.txt`);
                     if (response.ok) {
                         const content = await response.text();
                         const authorName = author.charAt(0).toUpperCase() + author.slice(1);
-                        const recipes = parseRecipeFile(content, authorName);
-                        allRecipes.push(...recipes);
+                        const cocktails = parseCocktailFile(content, authorName);
+                        allCocktails.push(...cocktails);
                         loadedCount++;
                     }
                 } catch (error) {
-                    console.log(`Could not load ${author}-recipes.txt`);
+                    console.log(`Could not load ${author}-cocktails.txt`);
                 }
             }
             
             if (loadedCount > 0) {
-                // Update categories and types
-                allCategories.clear();
                 allTypes.clear();
+                allSpirits.clear();
                 currentAuthors.clear();
                 
-                allRecipes.forEach(recipe => {
-                    recipe.category.forEach(cat => allCategories.add(cat));
-                    recipe.type.forEach(type => allTypes.add(type));
-                    currentAuthors.add(recipe.author);
+                allCocktails.forEach(cocktail => {
+                    cocktail.type.forEach(type => allTypes.add(type));
+                    cocktail.spirit.forEach(spirit => allSpirits.add(spirit));
+                    currentAuthors.add(cocktail.author);
                 });
                 
                 updateFilters();
-                filteredRecipes = [...allRecipes];
-                displayRecipes(filteredRecipes);
+                filteredCocktails = [...allCocktails];
+                displayCocktails(filteredCocktails);
                 
-                // Update subtitle
-                document.querySelector('.subtitle').textContent = `All Recipes • ${allRecipes.length} recipes from ${loadedCount} authors`;
+                document.querySelector('.subtitle').textContent = `All Cocktails • ${allCocktails.length} cocktails from ${loadedCount} authors`;
             } else {
-                document.getElementById('recipeGrid').innerHTML = `
-                    <div class="no-recipes">
-                        <p>No recipe files found.</p>
-                        <p>Make sure pierre-recipes.txt and adam-recipes.txt exist.</p>
+                document.getElementById('cocktailGrid').innerHTML = `
+                    <div class="no-cocktails">
+                        <p>No cocktail files found.</p>
+                        <p>Make sure pierre-cocktails.txt and adam-cocktails.txt exist.</p>
                     </div>
                 `;
             }
@@ -818,53 +798,46 @@
             const file = e.target.files[0];
             if (!file) return;
             
-            // Prompt for author name
-            const author = prompt('Enter the author name for these recipes:', 'Guest');
+            const author = prompt('Enter the author name for these cocktails:', 'Guest');
             if (!author) return;
             
             try {
                 const content = await file.text();
-                const newRecipes = parseRecipeFile(content, author);
+                const newCocktails = parseCocktailFile(content, author);
                 
-                // Add to all recipes
-                allRecipes.push(...newRecipes);
+                allCocktails.push(...newCocktails);
                 
-                // Update everything
-                allCategories.clear();
                 allTypes.clear();
+                allSpirits.clear();
                 currentAuthors.clear();
                 
-                allRecipes.forEach(recipe => {
-                    recipe.category.forEach(cat => allCategories.add(cat));
-                    recipe.type.forEach(type => allTypes.add(type));
-                    currentAuthors.add(recipe.author);
+                allCocktails.forEach(cocktail => {
+                    cocktail.type.forEach(type => allTypes.add(type));
+                    cocktail.spirit.forEach(spirit => allSpirits.add(spirit));
+                    currentAuthors.add(cocktail.author);
                 });
                 
                 updateFilters();
-                filteredRecipes = [...allRecipes];
-                displayRecipes(filteredRecipes);
+                filteredCocktails = [...allCocktails];
+                displayCocktails(filteredCocktails);
                 
-                // Clear active buttons
                 document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
-                
-                // Update subtitle
-                document.querySelector('.subtitle').textContent = `${allRecipes.length} recipes loaded from ${currentAuthors.size} authors`;
+                document.querySelector('.subtitle').textContent = `${allCocktails.length} cocktails loaded from ${currentAuthors.size} authors`;
                 
             } catch (error) {
                 alert('Error loading file: ' + error.message);
             }
         });
         
-        // Event listeners for filters
-        document.getElementById('searchInput').addEventListener('input', filterRecipes);
-        document.getElementById('categoryFilter').addEventListener('change', filterRecipes);
-        document.getElementById('typeFilter').addEventListener('change', filterRecipes);
-        document.getElementById('authorFilter').addEventListener('change', filterRecipes);
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', filterCocktails);
+        document.getElementById('typeFilter').addEventListener('change', filterCocktails);
+        document.getElementById('spiritFilter').addEventListener('change', filterCocktails);
+        document.getElementById('authorFilter').addEventListener('change', filterCocktails);
         
         // Auto-load on page load if deployed
         if (window.location.protocol !== 'file:') {
-            // Try to load all recipes automatically
-            setTimeout(loadAllRecipes, 100);
+            setTimeout(loadAllCocktails, 100);
         }
     </script>
 </body>

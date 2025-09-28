@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Collection</title>
+    <title>Recipe Collection - Pierre & Adam</title>
     <style>
         * {
             margin: 0;
@@ -64,7 +64,7 @@
             flex-wrap: wrap;
         }
         
-        .search-box, .filter-select, .file-input-wrapper {
+        .search-box, .filter-select, .file-input-wrapper, .author-buttons {
             flex: 1;
             min-width: 200px;
         }
@@ -83,6 +83,38 @@
             outline: none;
             transform: translateY(-2px);
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .author-buttons {
+            display: flex;
+            gap: 10px;
+            flex: 2;
+        }
+        
+        .author-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            border: 2px solid transparent;
+            border-radius: 50px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .author-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .author-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
         }
         
         .file-input-wrapper {
@@ -162,6 +194,17 @@
             font-weight: 600;
         }
         
+        .recipe-author {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
         .recipe-tags {
             display: flex;
             gap: 8px;
@@ -224,8 +267,12 @@
         
         .recipe-detail h2 {
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             font-size: 2em;
+        }
+        
+        .recipe-detail .recipe-author {
+            margin-bottom: 20px;
         }
         
         .recipe-section {
@@ -308,6 +355,21 @@
             margin: 20px 0;
         }
         
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         @media (max-width: 768px) {
             .recipe-grid {
                 grid-template-columns: 1fr;
@@ -320,27 +382,50 @@
             .recipe-detail {
                 padding: 20px;
             }
+            
+            .author-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>My Recipe Collection</h1>
-            <p class="subtitle">Load your recipe file to get started</p>
+            <h1>Recipe Collection</h1>
+            <p class="subtitle">Pierre & Adam's Kitchen</p>
         </header>
         
         <div class="controls">
+            <div class="author-buttons">
+                <button class="author-btn" id="pierreBtn" onclick="loadAuthorRecipes('pierre')">
+                    👨‍🍳 Pierre's Recipes
+                </button>
+                <button class="author-btn" id="adamBtn" onclick="loadAuthorRecipes('adam')">
+                    👨‍🍳 Adams's Recipes
+                </button>
+                <button class="author-btn" id="allBtn" onclick="loadAllRecipes()">
+                    👥 All Recipes
+                </button>
+            </div>
             <div class="file-input-wrapper">
                 <input type="file" id="fileInput" accept=".txt">
-                <label for="fileInput" class="file-input-label">📁 Load Recipe File</label>
+                <label for="fileInput" class="file-input-label">📁 Load Custom File</label>
             </div>
-            <input type="text" class="search-box" placeholder="Search recipes..." id="searchInput" disabled>
-            <select class="filter-select" id="categoryFilter" disabled>
+        </div>
+        
+        <div class="controls">
+            <input type="text" class="search-box" placeholder="Search recipes..." id="searchInput">
+            <select class="filter-select" id="categoryFilter">
                 <option value="">All Categories</option>
             </select>
-            <select class="filter-select" id="typeFilter" disabled>
+            <select class="filter-select" id="typeFilter">
                 <option value="">All Types</option>
+            </select>
+            <select class="filter-select" id="authorFilter">
+                <option value="">All Authors</option>
+                <option value="Pierre">Pierre</option>
+                <option value="Adam">Adam</option>
             </select>
         </div>
         
@@ -348,20 +433,21 @@
         
         <div id="recipeGrid">
             <div class="loading">
-                <p>📋 Please load a recipe file to display recipes</p>
-                <p style="font-size: 0.9em; margin-top: 10px;">Supported format: .txt file with recipe structure</p>
+                <p>📋 Click on an author's name above to load their recipes</p>
+                <p style="font-size: 0.9em; margin-top: 10px;">Or load a custom recipe file</p>
             </div>
         </div>
     </div>
     
     <script>
-        let recipes = [];
+        let allRecipes = [];
         let filteredRecipes = [];
         let allCategories = new Set();
         let allTypes = new Set();
+        let currentAuthors = new Set();
         
-        // Recipe parser function
-        function parseRecipeFile(content) {
+        // Recipe parser function - now includes author
+        function parseRecipeFile(content, author) {
             const recipes = [];
             const lines = content.split('\n');
             
@@ -385,7 +471,7 @@
                     continue;
                 }
                 
-                // Check for recipe name (starts with ### or is a header line after a section number)
+                // Check for recipe name
                 if (line.startsWith('###') || (lines[i-1] && /^\d+\.\d+/.test(lines[i-1]) && !line.includes('|') && !line.startsWith('Ingredients'))) {
                     // Save previous recipe if exists
                     if (currentRecipe && currentRecipe.name) {
@@ -400,6 +486,7 @@
                         
                         currentRecipe = {
                             name: name,
+                            author: author,
                             category: tags.filter(t => ['american', 'asian', 'swedish', 'italian', 'mexican', 'indian', 'french'].includes(t)),
                             type: tags.filter(t => ['chicken', 'beef', 'pork', 'tofu', 'sauce', 'soup', 'salad', 'breakfast'].includes(t)),
                             ingredients: [],
@@ -419,7 +506,7 @@
                     inInstructions = false;
                 }
                 
-                // Parse ingredient line (has pipes)
+                // Parse ingredient line
                 else if (inIngredients && line.includes('|') && currentRecipe) {
                     const parts = line.split('|').map(p => p.trim());
                     if (parts.length >= 3 && !parts[0].toLowerCase().includes('ingredients')) {
@@ -431,7 +518,7 @@
                     }
                 }
                 
-                // Check if we're starting instructions (numbered lines)
+                // Check if we're starting instructions
                 else if (/^\d+\./.test(line) && currentRecipe) {
                     inIngredients = false;
                     inInstructions = true;
@@ -446,7 +533,7 @@
                     instructionBuffer = line.replace(/^\d+\.\s*/, '');
                 }
                 
-                // Continue instruction on next line if it doesn't start with a number
+                // Continue instruction on next line
                 else if (inInstructions && !/^\d+\./.test(line) && !line.toLowerCase().includes('ingredients')) {
                     instructionBuffer += ' ' + line;
                 }
@@ -478,12 +565,13 @@
             recipesToShow.forEach((recipe, index) => {
                 const card = document.createElement('div');
                 card.className = 'recipe-card';
-                card.onclick = () => showRecipeDetail(index);
+                card.onclick = () => showRecipeDetail(recipesToShow.indexOf(recipe));
                 
                 const tags = [...new Set([...recipe.category, ...recipe.type])];
                 
                 card.innerHTML = `
                     <h3 class="recipe-title">${recipe.name}</h3>
+                    <span class="recipe-author">${recipe.author}</span>
                     <p>${recipe.ingredients.length} ingredients • ${recipe.instructions.length} steps</p>
                     <div class="recipe-tags">
                         ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
@@ -514,6 +602,7 @@
             detail.innerHTML = `
                 <button class="close-btn" onclick="closeRecipeDetail()">Close</button>
                 <h2>${recipe.name}</h2>
+                <span class="recipe-author">By ${recipe.author}</span>
                 
                 <div class="recipe-section">
                     <h3>Ingredients</h3>
@@ -580,17 +669,130 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const categoryFilter = document.getElementById('categoryFilter').value;
             const typeFilter = document.getElementById('typeFilter').value;
+            const authorFilter = document.getElementById('authorFilter').value;
             
-            filteredRecipes = recipes.filter(recipe => {
+            filteredRecipes = allRecipes.filter(recipe => {
                 const matchesSearch = recipe.name.toLowerCase().includes(searchTerm) ||
                                      recipe.ingredients.some(ing => ing.item.toLowerCase().includes(searchTerm));
                 const matchesCategory = !categoryFilter || recipe.category.includes(categoryFilter);
                 const matchesType = !typeFilter || recipe.type.includes(typeFilter);
+                const matchesAuthor = !authorFilter || recipe.author === authorFilter;
                 
-                return matchesSearch && matchesCategory && matchesType;
+                return matchesSearch && matchesCategory && matchesType && matchesAuthor;
             });
             
             displayRecipes(filteredRecipes);
+        }
+        
+        // Load recipes for a specific author
+        async function loadAuthorRecipes(author) {
+            // Update button states
+            document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(author + 'Btn').classList.add('active');
+            
+            // Show loading state
+            const originalText = document.getElementById(author + 'Btn').innerHTML;
+            document.getElementById(author + 'Btn').innerHTML = `Loading...<span class="loading-spinner"></span>`;
+            
+            try {
+                const response = await fetch(`${author}-recipes.txt`);
+                if (!response.ok) throw new Error('File not found');
+                
+                const content = await response.text();
+                const authorName = author.charAt(0).toUpperCase() + author.slice(1);
+                const newRecipes = parseRecipeFile(content, authorName);
+                
+                // Remove recipes from this author and add new ones
+                allRecipes = allRecipes.filter(r => r.author !== authorName);
+                allRecipes.push(...newRecipes);
+                
+                // Update categories and types
+                allCategories.clear();
+                allTypes.clear();
+                currentAuthors.clear();
+                
+                allRecipes.forEach(recipe => {
+                    recipe.category.forEach(cat => allCategories.add(cat));
+                    recipe.type.forEach(type => allTypes.add(type));
+                    currentAuthors.add(recipe.author);
+                });
+                
+                updateFilters();
+                filteredRecipes = allRecipes.filter(r => r.author === authorName);
+                displayRecipes(filteredRecipes);
+                
+                // Update subtitle
+                document.querySelector('.subtitle').textContent = `${authorName}'s Recipes • ${newRecipes.length} recipes loaded`;
+                
+            } catch (error) {
+                document.getElementById('recipeGrid').innerHTML = `
+                    <div class="error">
+                        <p><strong>Could not load ${author}-recipes.txt</strong></p>
+                        <p>Make sure the file exists in the same directory as this HTML file.</p>
+                    </div>
+                `;
+            } finally {
+                document.getElementById(author + 'Btn').innerHTML = originalText;
+            }
+        }
+        
+        // Load all recipes from both authors
+        async function loadAllRecipes() {
+            // Update button states
+            document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('allBtn').classList.add('active');
+            
+            // Show loading state
+            const originalText = document.getElementById('allBtn').innerHTML;
+            document.getElementById('allBtn').innerHTML = `Loading...<span class="loading-spinner"></span>`;
+            
+            allRecipes = [];
+            let loadedCount = 0;
+            
+            // Try to load both files
+            for (const author of ['pierre', 'adam']) {
+                try {
+                    const response = await fetch(`${author}-recipes.txt`);
+                    if (response.ok) {
+                        const content = await response.text();
+                        const authorName = author.charAt(0).toUpperCase() + author.slice(1);
+                        const recipes = parseRecipeFile(content, authorName);
+                        allRecipes.push(...recipes);
+                        loadedCount++;
+                    }
+                } catch (error) {
+                    console.log(`Could not load ${author}-recipes.txt`);
+                }
+            }
+            
+            if (loadedCount > 0) {
+                // Update categories and types
+                allCategories.clear();
+                allTypes.clear();
+                currentAuthors.clear();
+                
+                allRecipes.forEach(recipe => {
+                    recipe.category.forEach(cat => allCategories.add(cat));
+                    recipe.type.forEach(type => allTypes.add(type));
+                    currentAuthors.add(recipe.author);
+                });
+                
+                updateFilters();
+                filteredRecipes = [...allRecipes];
+                displayRecipes(filteredRecipes);
+                
+                // Update subtitle
+                document.querySelector('.subtitle').textContent = `All Recipes • ${allRecipes.length} recipes from ${loadedCount} authors`;
+            } else {
+                document.getElementById('recipeGrid').innerHTML = `
+                    <div class="no-recipes">
+                        <p>No recipe files found.</p>
+                        <p>Make sure pierre-recipes.txt and adam-recipes.txt exist.</p>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('allBtn').innerHTML = originalText;
         }
         
         // File input handler
@@ -598,38 +800,40 @@
             const file = e.target.files[0];
             if (!file) return;
             
+            // Prompt for author name
+            const author = prompt('Enter the author name for these recipes:', 'Guest');
+            if (!author) return;
+            
             try {
                 const content = await file.text();
-                recipes = parseRecipeFile(content);
+                const newRecipes = parseRecipeFile(content, author);
                 
-                // Collect all categories and types
+                // Add to all recipes
+                allRecipes.push(...newRecipes);
+                
+                // Update everything
                 allCategories.clear();
                 allTypes.clear();
-                recipes.forEach(recipe => {
+                currentAuthors.clear();
+                
+                allRecipes.forEach(recipe => {
                     recipe.category.forEach(cat => allCategories.add(cat));
                     recipe.type.forEach(type => allTypes.add(type));
+                    currentAuthors.add(recipe.author);
                 });
                 
-                // Update UI
                 updateFilters();
-                filteredRecipes = [...recipes];
+                filteredRecipes = [...allRecipes];
                 displayRecipes(filteredRecipes);
                 
-                // Enable controls
-                document.getElementById('searchInput').disabled = false;
-                document.getElementById('categoryFilter').disabled = false;
-                document.getElementById('typeFilter').disabled = false;
+                // Clear active buttons
+                document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
                 
                 // Update subtitle
-                document.querySelector('.subtitle').textContent = `${recipes.length} recipes loaded • ${file.name}`;
+                document.querySelector('.subtitle').textContent = `${allRecipes.length} recipes loaded from ${currentAuthors.size} authors`;
                 
             } catch (error) {
-                document.getElementById('recipeGrid').innerHTML = `
-                    <div class="error">
-                        <p><strong>Error loading file:</strong> ${error.message}</p>
-                        <p>Please make sure your file follows the correct format.</p>
-                    </div>
-                `;
+                alert('Error loading file: ' + error.message);
             }
         });
         
@@ -637,40 +841,12 @@
         document.getElementById('searchInput').addEventListener('input', filterRecipes);
         document.getElementById('categoryFilter').addEventListener('change', filterRecipes);
         document.getElementById('typeFilter').addEventListener('change', filterRecipes);
+        document.getElementById('authorFilter').addEventListener('change', filterRecipes);
         
-        // Load from URL parameter (for GitHub Pages deployment)
-        const urlParams = new URLSearchParams(window.location.search);
-        const recipeFileUrl = urlParams.get('file') || 'recipes.txt';
-        
-        // Try to auto-load recipes.txt if it exists
+        // Auto-load on page load if deployed
         if (window.location.protocol !== 'file:') {
-            fetch(recipeFileUrl)
-                .then(response => response.text())
-                .then(content => {
-                    recipes = parseRecipeFile(content);
-                    
-                    // Collect all categories and types
-                    allCategories.clear();
-                    allTypes.clear();
-                    recipes.forEach(recipe => {
-                        recipe.category.forEach(cat => allCategories.add(cat));
-                        recipe.type.forEach(type => allTypes.add(type));
-                    });
-                    
-                    updateFilters();
-                    filteredRecipes = [...recipes];
-                    displayRecipes(filteredRecipes);
-                    
-                    // Enable controls
-                    document.getElementById('searchInput').disabled = false;
-                    document.getElementById('categoryFilter').disabled = false;
-                    document.getElementById('typeFilter').disabled = false;
-                    
-                    document.querySelector('.subtitle').textContent = `${recipes.length} recipes loaded`;
-                })
-                .catch(() => {
-                    console.log('No default recipes.txt file found. User can load their own file.');
-                });
+            // Try to load all recipes automatically
+            setTimeout(loadAllRecipes, 100);
         }
     </script>
 </body>

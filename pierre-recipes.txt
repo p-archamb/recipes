@@ -68,3 +68,66 @@ Ground Black Pepper | 1 | Tsp
 Salt | 1 | tsp
 
 1. Mix
+
+### Marinade for Spare Ribs american:sauce
+Ingredients | Amount | Unit
+Ginger ale or ginger beer | ½ | cup
+Orange juice | ½ | cup
+Kosher salt | ¼ | cup
+Soy sauce | 2 | Tbsp
+Dry ranch-flavored salad dressing mix | ¼ | (packet)
+
+1. In a bowl, combine all the marinade ingredients and stir thoroughly.
+2. Pour into a container, cover, and refrigerate. Shake well before use.
+
+### Dry Rub for Spare Ribs american:sauce
+Ingredients | Amount | Unit
+Granulated sugar | ¼ | cup
+Chili powder | ½ | Tbsp
+Coarsely ground black pepper | ½ | Tbsp
+Garlic powder | ½ | Tbsp
+Ground cumin | ½ | Tbsp
+Kosher salt | ½ | Tbsp
+Mustard powder | ½ | Tbsp
+Onion powder | ½ | Tbsp
+Cayenne | 1/8 | tsp
+
+1. Combine all rub ingredients in a bowl and mix until evenly distributed.
+2. Store in an airtight container if not used immediately.
+
+### Barbecue Sauce for Spare Ribs american:sauce
+Ingredients | Amount | Unit
+Ketchup | ½ | cup
+Apple cider vinegar | ⅙ | cup (≈ 2 Tbsp + 2 tsp)
+Dark brown sugar | 1 | Tbsp
+Freshly ground black pepper | ½ | Tbsp
+Garlic powder | ½ | Tbsp
+Honey | ½ | Tbsp
+Kosher salt | ½ | Tbsp
+Maple syrup | ½ | Tbsp
+Onion powder | ½ | Tbsp
+Paprika | ½ | Tbsp
+Worcestershire sauce | ½ | Tbsp
+
+1. Put all sauce ingredients into a blender and pulse until well combined.
+2. Transfer to a small pot and heat over medium, stirring continuously until warmed (do not boil).
+3. Remove from heat and use while hot, or cool and refrigerate for later use.
+
+### Easy Backyard Spare Ribs american:pork
+Ingredients | Amount | Unit
+Spare ribs (St. Louis style) | 1 | rack
+Marinade (reference recipe) |1 | recipe
+Dry rub (reference recipe) | 1 | recipe
+Barbecue sauce (from above) | 1 | recipe
+
+1. Trim fat and remove membrane from the back of the ribs, making them as uniform in length as possible.
+2. Place the ribs in a pan and cover completely with the marinade. Cover the pan with foil and refrigerate for at least 4 hours or overnight.
+3. Preheat charcoal grill to 275 °F. Use 1.5 chimney of coals. Assemble coals on one side and cook on the opposite side; optionally add soaked wood chips for smoke.
+4. Remove ribs from marinade. Lightly apply the dry rub over all surfaces.
+5. Immediately place ribs (bone side down) on the grill. Smoke for 3-4 hours.
+6. Check the grill temperature every 30-60 to make sure it stays between 250-275.
+7. Once ribs hit a temperature of 207, brush ribs front and back with barbecue sauce, keep on grill for 8 more minutes.
+8. Transfer ribs to a cutting board, let rest uncovered for 10 minutes. Cut into portions of 4 ribs and serve.
+9. Future experimental steps: After 3 hours, remove ribs and place them (bone side down) in a new pan with ~¼ cup water. Cover tightly with foil and return to smoker/grill for 2 more hours.
+10. Remove foil, brush ribs front and back with barbecue sauce, re-foil, and let rest in the still-warm smoker/grill as the heat dies down for 1 hour.
+11. Transfer ribs to a cutting board, let rest uncovered for 10 minutes. Cut into portions and serve.

@@ -105,6 +105,11 @@
             padding: 32px;
             margin-bottom: 32px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: opacity 0.3s ease;
+        }
+
+        .controls-wrapper.hidden {
+            display: none;
         }
 
         .author-buttons {
@@ -221,57 +226,26 @@
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
             margin-bottom: 40px;
+            transition: opacity 0.3s ease;
+        }
+
+        .recipe-grid.hidden {
+            display: none;
         }
 
         .recipe-card {
             background: white;
             border-radius: 20px;
-            padding: 0;
+            padding: 24px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
 
         .recipe-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-        }
-
-        .recipe-card-header {
-            height: 160px;
-            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .recipe-card-header::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            bottom: -50%;
-            left: -50%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .recipe-card:hover .recipe-card-header::after {
-            transform: translateX(100%);
-        }
-
-        .recipe-card-body {
-            padding: 24px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
         }
 
         .recipe-title {
@@ -352,6 +326,14 @@
 
         .recipe-detail.active {
             display: block;
+        }
+
+        .bottom-discussion {
+            display: none;
+        }
+
+        .bottom-discussion.hidden {
+            display: none;
         }
 
         .close-btn {
@@ -624,33 +606,6 @@
         let allTypes = new Set();
         let currentAuthors = new Set();
 
-        // Recipe icons for different categories/types
-        const recipeIcons = {
-            american: '🍔',
-            asian: '🍜',
-            italian: '🍝',
-            mexican: '🌮',
-            indian: '🍛',
-            french: '🥖',
-            swedish: '🥞',
-            chicken: '🍗',
-            beef: '🥩',
-            pork: '🥓',
-            tofu: '🥡',
-            soup: '🍲',
-            salad: '🥗',
-            breakfast: '🍳',
-            sauce: '🥫'
-        };
-
-        function getRecipeIcon(recipe) {
-            const allTags = [...recipe.category, ...recipe.type];
-            for (const tag of allTags) {
-                if (recipeIcons[tag]) return recipeIcons[tag];
-            }
-            return '🍽️';
-        }
-
         // Recipe parser function
         function parseRecipeFile(content, author) {
             const recipes = [];
@@ -763,22 +718,16 @@
                 card.onclick = () => showRecipeDetail(recipesToShow.indexOf(recipe));
 
                 const tags = [...new Set([...recipe.category, ...recipe.type])];
-                const icon = getRecipeIcon(recipe);
 
                 card.innerHTML = `
-                    <div class="recipe-card-header">
-                        ${icon}
+                    <h3 class="recipe-title">${recipe.name}</h3>
+                    <span class="recipe-author">👨‍🍳 ${recipe.author}</span>
+                    <div class="recipe-meta">
+                        <span>📋 ${recipe.ingredients.length} ingredients</span>
+                        <span>⏱️ ${recipe.instructions.length} steps</span>
                     </div>
-                    <div class="recipe-card-body">
-                        <h3 class="recipe-title">${recipe.name}</h3>
-                        <span class="recipe-author">👨‍🍳 ${recipe.author}</span>
-                        <div class="recipe-meta">
-                            <span>📋 ${recipe.ingredients.length} ingredients</span>
-                            <span>⏱️ ${recipe.instructions.length} steps</span>
-                        </div>
-                        <div class="recipe-tags">
-                            ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
+                    <div class="recipe-tags">
+                        ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
                 `;
 
@@ -791,6 +740,11 @@
         function showRecipeDetail(index) {
             const recipe = filteredRecipes[index];
             document.title = `${recipe.name} - Recipe`;
+
+            // Hide controls and grid
+            document.querySelector('.controls-wrapper').classList.add('hidden');
+            document.getElementById('recipeGrid').classList.add('hidden');
+            document.querySelector('.bottom-discussion').classList.add('hidden');
 
             const detail = document.getElementById('recipeDetail');
 
@@ -836,30 +790,21 @@
 
                 <div class="recipe-section">
                     <h3>Discussion</h3>
-                    <script src="https://giscus.app/client.js"
-                            data-repo="p-archamb/recipes"
-                            data-repo-id="R_kgDOP3y3hA"
-                            data-category="General"
-                            data-category-id="DIC_kwDOP3y3hM4CwAVj"
-                            data-mapping="title"
-                            data-strict="1"
-                            data-reactions-enabled="1"
-                            data-emit-metadata="0"
-                            data-input-position="bottom"
-                            data-theme="preferred_color_scheme"
-                            data-lang="en"
-                            crossorigin="anonymous"
-                            async>
-                    <\/script>
+                    <div id="comments-container"></div>
                 </div>
             `;
 
             detail.classList.add('active');
-            detail.scrollIntoView({ behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // Load Giscus comments
             const existingScript = document.querySelector('script[src*="giscus.app"]');
             if (existingScript) existingScript.remove();
 
+            const existingGiscus = document.querySelector('.giscus');
+            if (existingGiscus) existingGiscus.remove();
+
+            const commentsContainer = document.getElementById('comments-container');
             const newScript = document.createElement('script');
             newScript.src = 'https://giscus.app/client.js';
             newScript.setAttribute('data-repo', 'p-archamb/recipes');
@@ -875,7 +820,7 @@
             newScript.setAttribute('data-lang', 'en');
             newScript.setAttribute('crossorigin', 'anonymous');
             newScript.async = true;
-            document.body.appendChild(newScript);
+            commentsContainer.appendChild(newScript);
         }
 
         function closeRecipeDetail() {
@@ -883,25 +828,16 @@
             detail.classList.remove('active');
             document.title = 'Recipe Collection - Pierre & Adam';
 
+            // Show controls and grid again
+            document.querySelector('.controls-wrapper').classList.remove('hidden');
+            document.getElementById('recipeGrid').classList.remove('hidden');
+
+            // Clean up Giscus
             const existingScript = document.querySelector('script[src*="giscus.app"]');
             if (existingScript) existingScript.remove();
 
-            const newScript = document.createElement('script');
-            newScript.src = 'https://giscus.app/client.js';
-            newScript.setAttribute('data-repo', 'p-archamb/recipes');
-            newScript.setAttribute('data-repo-id', 'R_kgDOP3y3hA');
-            newScript.setAttribute('data-category', 'General');
-            newScript.setAttribute('data-category-id', 'DIC_kwDOP3y3hM4CwAVj');
-            newScript.setAttribute('data-mapping', 'title');
-            newScript.setAttribute('data-strict', '1');
-            newScript.setAttribute('data-reactions-enabled', '1');
-            newScript.setAttribute('data-emit-metadata', '0');
-            newScript.setAttribute('data-input-position', 'bottom');
-            newScript.setAttribute('data-theme', 'preferred_color_scheme');
-            newScript.setAttribute('data-lang', 'en');
-            newScript.setAttribute('crossorigin', 'anonymous');
-            newScript.async = true;
-            document.body.appendChild(newScript);
+            const existingGiscus = document.querySelector('.giscus');
+            if (existingGiscus) existingGiscus.remove();
         }
 
         function updateFilters() {
@@ -1091,23 +1027,8 @@
         }
     </script>
 
-    <div style="margin-top: 50px; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+    <div class="bottom-discussion" style="margin-top: 50px; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: none;">
         <h2 style="margin-bottom: 24px; color: #2d3436; font-weight: 700;">Discussion</h2>
-        <script src="https://giscus.app/client.js"
-                data-repo="p-archamb/recipes"
-                data-repo-id="R_kgDOP3y3hA"
-                data-category="General"
-                data-category-id="DIC_kwDOP3y3hM4CwAVj"
-                data-mapping="title"
-                data-strict="1"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="preferred_color_scheme"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-        </script>
     </div>
 
 </body>

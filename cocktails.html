@@ -105,6 +105,11 @@
             padding: 32px;
             margin-bottom: 32px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: opacity 0.3s ease;
+        }
+
+        .controls-wrapper.hidden {
+            display: none;
         }
 
         .author-buttons {
@@ -221,57 +226,26 @@
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
             margin-bottom: 40px;
+            transition: opacity 0.3s ease;
+        }
+
+        .cocktail-grid.hidden {
+            display: none;
         }
 
         .cocktail-card {
             background: white;
             border-radius: 20px;
-            padding: 0;
+            padding: 24px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
         }
 
         .cocktail-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-        }
-
-        .cocktail-card-header {
-            height: 160px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4em;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cocktail-card-header::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            bottom: -50%;
-            left: -50%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-
-        .cocktail-card:hover .cocktail-card-header::after {
-            transform: translateX(100%);
-        }
-
-        .cocktail-card-body {
-            padding: 24px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
         }
 
         .cocktail-title {
@@ -352,6 +326,14 @@
 
         .cocktail-detail.active {
             display: block;
+        }
+
+        .bottom-discussion {
+            display: none;
+        }
+
+        .bottom-discussion.hidden {
+            display: none;
         }
 
         .close-btn {
@@ -624,41 +606,6 @@
         let allSpirits = new Set();
         let currentAuthors = new Set();
 
-        // Cocktail icons for different types/spirits
-        const cocktailIcons = {
-            classic: '🥃',
-            modern: '🍸',
-            tiki: '🌴',
-            sour: '🍋',
-            fizz: '💨',
-            martini: '🍸',
-            'old-fashioned': '🥃',
-            highball: '🥤',
-            punch: '🍹',
-            shot: '🥃',
-            frozen: '🧊',
-            hot: '☕',
-            vodka: '🍸',
-            gin: '🍸',
-            rum: '🍹',
-            whiskey: '🥃',
-            bourbon: '🥃',
-            tequila: '🌮',
-            mezcal: '🌵',
-            brandy: '🍷',
-            wine: '🍷',
-            champagne: '🍾',
-            beer: '🍺'
-        };
-
-        function getCocktailIcon(cocktail) {
-            const allTags = [...cocktail.type, ...cocktail.spirit];
-            for (const tag of allTags) {
-                if (cocktailIcons[tag]) return cocktailIcons[tag];
-            }
-            return '🍹';
-        }
-
         // Cocktail parser function
         function parseCocktailFile(content, author) {
             const cocktails = [];
@@ -766,22 +713,16 @@
                 card.onclick = () => showCocktailDetail(cocktailsToShow.indexOf(cocktail));
 
                 const tags = [...new Set([...cocktail.type, ...cocktail.spirit])];
-                const icon = getCocktailIcon(cocktail);
 
                 card.innerHTML = `
-                    <div class="cocktail-card-header">
-                        ${icon}
+                    <h3 class="cocktail-title">${cocktail.name}</h3>
+                    <span class="cocktail-author">🍹 ${cocktail.author}</span>
+                    <div class="cocktail-meta">
+                        <span>📋 ${cocktail.ingredients.length} ingredients</span>
+                        <span>⏱️ ${cocktail.instructions.length} steps</span>
                     </div>
-                    <div class="cocktail-card-body">
-                        <h3 class="cocktail-title">${cocktail.name}</h3>
-                        <span class="cocktail-author">🍹 ${cocktail.author}</span>
-                        <div class="cocktail-meta">
-                            <span>📋 ${cocktail.ingredients.length} ingredients</span>
-                            <span>⏱️ ${cocktail.instructions.length} steps</span>
-                        </div>
-                        <div class="cocktail-tags">
-                            ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
+                    <div class="cocktail-tags">
+                        ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                     </div>
                 `;
 
@@ -795,6 +736,11 @@
         function showCocktailDetail(index) {
             const cocktail = filteredCocktails[index];
             document.title = `${cocktail.name} - Cocktail`;
+
+            // Hide controls and grid
+            document.querySelector('.controls-wrapper').classList.add('hidden');
+            document.getElementById('cocktailGrid').classList.add('hidden');
+            document.querySelector('.bottom-discussion').classList.add('hidden');
 
             const detail = document.getElementById('cocktailDetail');
 
@@ -840,30 +786,21 @@
 
                 <div class="cocktail-section">
                     <h3>Discussion</h3>
-                    <script src="https://giscus.app/client.js"
-                            data-repo="p-archamb/recipes"
-                            data-repo-id="R_kgDOP3y3hA"
-                            data-category="General"
-                            data-category-id="DIC_kwDOP3y3hM4CwAVj"
-                            data-mapping="title"
-                            data-strict="1"
-                            data-reactions-enabled="1"
-                            data-emit-metadata="0"
-                            data-input-position="bottom"
-                            data-theme="preferred_color_scheme"
-                            data-lang="en"
-                            crossorigin="anonymous"
-                            async>
-                    <\/script>
+                    <div id="comments-container"></div>
                 </div>
             `;
 
             detail.classList.add('active');
-            detail.scrollIntoView({ behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // Load Giscus comments
             const existingScript = document.querySelector('script[src*="giscus.app"]');
             if (existingScript) existingScript.remove();
 
+            const existingGiscus = document.querySelector('.giscus');
+            if (existingGiscus) existingGiscus.remove();
+
+            const commentsContainer = document.getElementById('comments-container');
             const newScript = document.createElement('script');
             newScript.src = 'https://giscus.app/client.js';
             newScript.setAttribute('data-repo', 'p-archamb/recipes');
@@ -879,7 +816,7 @@
             newScript.setAttribute('data-lang', 'en');
             newScript.setAttribute('crossorigin', 'anonymous');
             newScript.async = true;
-            document.body.appendChild(newScript);
+            commentsContainer.appendChild(newScript);
         }
 
         // Close cocktail detail
@@ -888,25 +825,16 @@
             detail.classList.remove('active');
             document.title = 'Cocktail Collection - Pierre & Adam';
 
+            // Show controls and grid again
+            document.querySelector('.controls-wrapper').classList.remove('hidden');
+            document.getElementById('cocktailGrid').classList.remove('hidden');
+
+            // Clean up Giscus
             const existingScript = document.querySelector('script[src*="giscus.app"]');
             if (existingScript) existingScript.remove();
 
-            const newScript = document.createElement('script');
-            newScript.src = 'https://giscus.app/client.js';
-            newScript.setAttribute('data-repo', 'p-archamb/recipes');
-            newScript.setAttribute('data-repo-id', 'R_kgDOP3y3hA');
-            newScript.setAttribute('data-category', 'General');
-            newScript.setAttribute('data-category-id', 'DIC_kwDOP3y3hM4CwAVj');
-            newScript.setAttribute('data-mapping', 'title');
-            newScript.setAttribute('data-strict', '1');
-            newScript.setAttribute('data-reactions-enabled', '1');
-            newScript.setAttribute('data-emit-metadata', '0');
-            newScript.setAttribute('data-input-position', 'bottom');
-            newScript.setAttribute('data-theme', 'preferred_color_scheme');
-            newScript.setAttribute('data-lang', 'en');
-            newScript.setAttribute('crossorigin', 'anonymous');
-            newScript.async = true;
-            document.body.appendChild(newScript);
+            const existingGiscus = document.querySelector('.giscus');
+            if (existingGiscus) existingGiscus.remove();
         }
 
         // Update filter dropdowns
@@ -1103,23 +1031,8 @@
         }
     </script>
 
-    <div style="margin-top: 50px; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+    <div class="bottom-discussion" style="margin-top: 50px; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); display: none;">
         <h2 style="margin-bottom: 24px; color: #2d3436; font-weight: 700;">Discussion</h2>
-        <script src="https://giscus.app/client.js"
-                data-repo="p-archamb/recipes"
-                data-repo-id="R_kgDOP3y3hA"
-                data-category="General"
-                data-category-id="DIC_kwDOP3y3hM4CwAVj"
-                data-mapping="title"
-                data-strict="1"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="preferred_color_scheme"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-        </script>
     </div>
 
 </body>

@@ -10,399 +10,552 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
+            color: #2d3436;
         }
-        
+
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
-        
+
+        /* Header Styles */
         header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        h1 {
-            color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .subtitle {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 60px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            color: #666;
-            font-size: 1.2em;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .search-box, .filter-select, .file-input-wrapper, .author-buttons {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .search-box, .filter-select {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .search-box:focus, .filter-select:focus {
-            outline: none;
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-        
-        .author-buttons {
-            display: flex;
-            gap: 10px;
-            flex: 2;
-        }
-        
-        .author-btn {
-            flex: 1;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-            border: 2px solid transparent;
-            border-radius: 50px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .author-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-        }
-        
-        .author-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: transparent;
-        }
-        
-        .file-input-wrapper {
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 32px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
             position: relative;
             overflow: hidden;
-            display: inline-block;
         }
-        
-        .file-input-wrapper input[type=file] {
+
+        header::before {
+            content: '🍳';
             position: absolute;
-            left: -9999px;
+            font-size: 120px;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.1;
         }
-        
-        .file-input-label {
-            display: block;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        h1 {
+            color: #2d3436;
+            font-size: 3em;
+            margin-bottom: 8px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #636e72;
+            font-size: 1.2em;
+            font-weight: 400;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 500;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(238, 90, 111, 0.3);
         }
-        
-        .file-input-label:hover {
+
+        .nav-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 6px 20px rgba(238, 90, 111, 0.4);
         }
-        
-        .recipe-grid {
+
+        /* Loading & Messages */
+        .loading, .no-recipes {
+            text-align: center;
+            padding: 80px 40px;
+            background: white;
+            border-radius: 24px;
+            color: #636e72;
+            font-size: 1.2em;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .loading p:first-child {
+            font-size: 3em;
+            margin-bottom: 16px;
+        }
+
+        /* Controls */
+        .controls-wrapper {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .author-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
         }
-        
-        .recipe-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
+
+        .author-btn {
+            padding: 16px 24px;
+            background: #f8f9fa;
+            color: #2d3436;
+            border: 2px solid transparent;
+            border-radius: 16px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
         }
-        
-        .recipe-card::before {
+
+        .author-btn::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+            bottom: 0;
+            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        
-        .recipe-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+
+        .author-btn span {
+            position: relative;
+            z-index: 1;
         }
-        
-        .recipe-card:hover::before {
-            transform: scaleX(1);
+
+        .author-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        
-        .recipe-title {
-            font-size: 1.4em;
-            color: #333;
-            margin-bottom: 10px;
+
+        .author-btn.active {
+            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+            color: #2d3436;
+            border-color: #fcb69f;
+            box-shadow: 0 4px 12px rgba(252, 182, 159, 0.3);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 24px;
+            background: #2d3436;
+            color: white;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 16px;
             font-weight: 600;
+            transition: all 0.3s ease;
         }
-        
-        .recipe-author {
-            display: inline-block;
-            padding: 3px 10px;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+
+        .file-input-label:hover {
+            background: #636e72;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .search-box, .filter-select {
+            padding: 14px 20px;
+            border: 2px solid #e9ecef;
             border-radius: 12px;
-            font-size: 0.85em;
-            font-weight: 500;
-            margin-bottom: 10px;
+            background: white;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
-        
+
+        .search-box {
+            font-weight: 500;
+        }
+
+        .search-box:focus, .filter-select:focus {
+            outline: none;
+            border-color: #fcb69f;
+            box-shadow: 0 0 0 3px rgba(252, 182, 159, 0.1);
+        }
+
+        /* Recipe Grid */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+        }
+
+        .recipe-card-header {
+            height: 160px;
+            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recipe-card-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            bottom: -50%;
+            left: -50%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .recipe-card:hover .recipe-card-header::after {
+            transform: translateX(100%);
+        }
+
+        .recipe-card-body {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-title {
+            font-size: 1.3em;
+            color: #2d3436;
+            margin-bottom: 12px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .recipe-author {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #f8f9fa;
+            color: #636e72;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            width: fit-content;
+        }
+
+        .recipe-meta {
+            color: #636e72;
+            font-size: 0.9em;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .recipe-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         .recipe-tags {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 15px;
+            margin-top: auto;
         }
-        
+
         .tag {
-            padding: 5px 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             color: white;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 500;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: capitalize;
         }
-        
+
+        /* Recipe Detail View */
         .recipe-detail {
             display: none;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            animation: slideIn 0.3s ease;
+            background: white;
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(-30px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
+
         .recipe-detail.active {
             display: block;
         }
-        
+
         .close-btn {
             float: right;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
+            padding: 12px 28px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 15px;
+            font-weight: 600;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(238, 90, 111, 0.3);
         }
-        
+
         .close-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(238, 90, 111, 0.4);
         }
-        
+
         .recipe-detail h2 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2em;
+            color: #2d3436;
+            margin-bottom: 16px;
+            font-size: 2.5em;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            clear: both;
         }
-        
+
         .recipe-detail .recipe-author {
-            margin-bottom: 20px;
+            margin-bottom: 32px;
+            font-size: 1em;
+            padding: 8px 16px;
         }
-        
+
         .recipe-section {
-            margin: 30px 0;
+            margin: 40px 0;
         }
-        
+
         .recipe-section h3 {
-            color: #555;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
+            color: #2d3436;
+            margin-bottom: 24px;
+            font-size: 1.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        
+
+        .recipe-section h3::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+            border-radius: 2px;
+        }
+
         .ingredients-table {
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 24px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
-        
+
         .ingredients-table th {
             text-align: left;
-            padding: 10px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #fcb69f 0%, #ffecd2 100%);
+            color: #2d3436;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        
+
         .ingredients-table td {
-            padding: 10px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f3f5;
+            background: white;
         }
-        
-        .ingredients-table tr:hover {
-            background: #f9f9f9;
+
+        .ingredients-table tr:last-child td {
+            border-bottom: none;
         }
-        
+
+        .ingredients-table tr:hover td {
+            background: #f8f9fa;
+        }
+
         .instructions {
             counter-reset: step-counter;
+            list-style: none;
         }
-        
+
         .instructions li {
             counter-increment: step-counter;
             position: relative;
-            padding-left: 50px;
-            margin-bottom: 20px;
-            list-style: none;
+            padding: 24px 24px 24px 80px;
+            margin-bottom: 16px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.3s ease;
         }
-        
+
+        .instructions li:hover {
+            background: #f1f3f5;
+            transform: translateX(4px);
+        }
+
         .instructions li::before {
             content: counter(step-counter);
             position: absolute;
-            left: 0;
-            top: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 1.1em;
+            box-shadow: 0 4px 12px rgba(238, 90, 111, 0.3);
         }
-        
-        .no-recipes {
-            text-align: center;
-            padding: 60px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            color: #666;
-            font-size: 1.2em;
-        }
-        
+
         .error {
-            background: #fee;
-            color: #c33;
-            padding: 20px;
-            border-radius: 10px;
+            background: #fff5f5;
+            color: #c92a2a;
+            padding: 24px;
+            border-radius: 12px;
             margin: 20px 0;
+            border-left: 4px solid #c92a2a;
         }
-        
+
         .loading-spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             margin-left: 10px;
             border: 3px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        @media (max-width: 768px) {
-            .recipe-grid {
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .filter-controls {
                 grid-template-columns: 1fr;
             }
-            
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            header {
+                padding: 32px 24px;
+            }
+
+            header::before {
+                font-size: 80px;
+                right: 20px;
+            }
+
             h1 {
                 font-size: 2em;
             }
-            
-            .recipe-detail {
+
+            .subtitle {
+                font-size: 1em;
+            }
+
+            .controls-wrapper {
                 padding: 20px;
             }
-            
-            .author-buttons {
-                flex-direction: column;
+
+            .recipe-grid {
+                grid-template-columns: 1fr;
             }
-        }
 
-        .nav-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 20px;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 20px;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-        }
+            .recipe-detail {
+                padding: 24px;
+            }
 
-        .nav-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(44, 62, 80, 0.3);
+            .recipe-detail h2 {
+                font-size: 1.8em;
+            }
+
+            .author-buttons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -411,97 +564,126 @@
         <header>
             <h1>Recipe Collection</h1>
             <p class="subtitle">Pierre & Adam's Kitchen</p>
-            <a href="cocktails.html" class="nav-link">View Cocktail Collection →</a>
+            <a href="cocktails.html" class="nav-link">
+                <span>🍹</span>
+                <span>View Cocktail Collection</span>
+            </a>
         </header>
-        
-        <div class="controls">
+
+        <div class="controls-wrapper">
             <div class="author-buttons">
                 <button class="author-btn" id="pierreBtn" onclick="loadAuthorRecipes('pierre')">
-                    Pierre's Recipes
+                    <span>👨‍🍳 Pierre's Recipes</span>
                 </button>
                 <button class="author-btn" id="adamBtn" onclick="loadAuthorRecipes('adam')">
-                    Adams's Recipes
+                    <span>👨‍🍳 Adam's Recipes</span>
                 </button>
                 <button class="author-btn" id="allBtn" onclick="loadAllRecipes()">
-                    👥 All Recipes
+                    <span>👥 All Recipes</span>
                 </button>
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept=".txt">
+                    <label for="fileInput" class="file-input-label">
+                        <span>📁</span>
+                        <span>Load Custom File</span>
+                    </label>
+                </div>
             </div>
-            <div class="file-input-wrapper">
-                <input type="file" id="fileInput" accept=".txt">
-                <label for="fileInput" class="file-input-label">📁 Load Custom File</label>
+
+            <div class="filter-controls">
+                <input type="text" class="search-box" placeholder="🔍 Search recipes or ingredients..." id="searchInput">
+                <select class="filter-select" id="categoryFilter">
+                    <option value="">All Categories</option>
+                </select>
+                <select class="filter-select" id="typeFilter">
+                    <option value="">All Types</option>
+                </select>
+                <select class="filter-select" id="authorFilter">
+                    <option value="">All Authors</option>
+                    <option value="Pierre">Pierre</option>
+                    <option value="Adam">Adam</option>
+                </select>
             </div>
         </div>
-        
-        <div class="controls">
-            <input type="text" class="search-box" placeholder="Search recipes..." id="searchInput">
-            <select class="filter-select" id="categoryFilter">
-                <option value="">All Categories</option>
-            </select>
-            <select class="filter-select" id="typeFilter">
-                <option value="">All Types</option>
-            </select>
-            <select class="filter-select" id="authorFilter">
-                <option value="">All Authors</option>
-                <option value="Pierre">Pierre</option>
-                <option value="Adam">Adam</option>
-            </select>
-        </div>
-        
+
         <div class="recipe-detail" id="recipeDetail"></div>
-        
+
         <div id="recipeGrid">
             <div class="loading">
-                <p>📋 Click on an author's name above to load their recipes</p>
-                <p style="font-size: 0.9em; margin-top: 10px;">Or load a custom recipe file</p>
+                <p>🍳</p>
+                <p>Click on an author's name to load their recipes</p>
+                <p style="font-size: 0.85em; margin-top: 12px; color: #868e96;">Or load a custom recipe file</p>
             </div>
         </div>
     </div>
-    
+
     <script>
         let allRecipes = [];
         let filteredRecipes = [];
         let allCategories = new Set();
         let allTypes = new Set();
         let currentAuthors = new Set();
-        
-        // Recipe parser function - now includes author
+
+        // Recipe icons for different categories/types
+        const recipeIcons = {
+            american: '🍔',
+            asian: '🍜',
+            italian: '🍝',
+            mexican: '🌮',
+            indian: '🍛',
+            french: '🥖',
+            swedish: '🥞',
+            chicken: '🍗',
+            beef: '🥩',
+            pork: '🥓',
+            tofu: '🥡',
+            soup: '🍲',
+            salad: '🥗',
+            breakfast: '🍳',
+            sauce: '🥫'
+        };
+
+        function getRecipeIcon(recipe) {
+            const allTags = [...recipe.category, ...recipe.type];
+            for (const tag of allTags) {
+                if (recipeIcons[tag]) return recipeIcons[tag];
+            }
+            return '🍽️';
+        }
+
+        // Recipe parser function
         function parseRecipeFile(content, author) {
             const recipes = [];
             const lines = content.split('\n');
-            
+
             let currentRecipe = null;
             let inIngredients = false;
             let inInstructions = false;
             let instructionBuffer = '';
             let instructionNumber = 1;
-            
+
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
-                
-                // Skip empty lines
+
                 if (!line) {
                     if (instructionBuffer && currentRecipe) {
-                        // Save buffered instruction
                         currentRecipe.instructions.push(instructionBuffer.trim());
                         instructionBuffer = '';
                         instructionNumber++;
                     }
                     continue;
                 }
-                
-                // Check for recipe name
+
                 if (line.startsWith('###') || (lines[i-1] && /^\d+\.\d+/.test(lines[i-1]) && !line.includes('|') && !line.startsWith('Ingredients'))) {
-                    // Save previous recipe if exists
                     if (currentRecipe && currentRecipe.name) {
                         recipes.push(currentRecipe);
                     }
-                    
-                    // Extract recipe name and tags
+
                     const nameMatch = line.replace(/^###\s*/, '').match(/^([^:]+)(?:\s+([^:]+):?(.*))?$/);
                     if (nameMatch) {
                         const name = nameMatch[1].trim();
                         const tags = line.toLowerCase().match(/\b(american|asian|swedish|italian|mexican|indian|french|chicken|beef|pork|tofu|sauce|soup|salad|breakfast)\b/g) || [];
-                        
+
                         currentRecipe = {
                             name: name,
                             author: author,
@@ -510,21 +692,19 @@
                             ingredients: [],
                             instructions: []
                         };
-                        
+
                         inIngredients = false;
                         inInstructions = false;
                         instructionBuffer = '';
                         instructionNumber = 1;
                     }
                 }
-                
-                // Check for ingredients header
+
                 else if (line.toLowerCase().includes('ingredients') && line.toLowerCase().includes('amount')) {
                     inIngredients = true;
                     inInstructions = false;
                 }
-                
-                // Parse ingredient line
+
                 else if (inIngredients && line.includes('|') && currentRecipe) {
                     const parts = line.split('|').map(p => p.trim());
                     if (parts.length >= 3 && !parts[0].toLowerCase().includes('ingredients')) {
@@ -535,79 +715,85 @@
                         });
                     }
                 }
-                
-                // Check if we're starting instructions
+
                 else if (/^\d+\./.test(line) && currentRecipe) {
                     inIngredients = false;
                     inInstructions = true;
-                    
-                    // Save previous instruction if exists
+
                     if (instructionBuffer) {
                         currentRecipe.instructions.push(instructionBuffer.trim());
                         instructionBuffer = '';
                     }
-                    
-                    // Start new instruction
+
                     instructionBuffer = line.replace(/^\d+\.\s*/, '');
                 }
-                
-                // Continue instruction on next line
+
                 else if (inInstructions && !/^\d+\./.test(line) && !line.toLowerCase().includes('ingredients')) {
                     instructionBuffer += ' ' + line;
                 }
             }
-            
-            // Save last instruction if exists
+
             if (instructionBuffer && currentRecipe) {
                 currentRecipe.instructions.push(instructionBuffer.trim());
             }
-            
-            // Save last recipe
+
             if (currentRecipe && currentRecipe.name) {
                 recipes.push(currentRecipe);
             }
-            
+
             return recipes;
         }
-        
+
         // Function to display recipes
         function displayRecipes(recipesToShow) {
             const grid = document.getElementById('recipeGrid');
             grid.innerHTML = '';
-            
+
             if (recipesToShow.length === 0) {
                 grid.innerHTML = '<div class="no-recipes">No recipes found matching your criteria.</div>';
                 return;
             }
-            
+
+            const gridContainer = document.createElement('div');
+            gridContainer.className = 'recipe-grid';
+
             recipesToShow.forEach((recipe, index) => {
                 const card = document.createElement('div');
                 card.className = 'recipe-card';
                 card.onclick = () => showRecipeDetail(recipesToShow.indexOf(recipe));
-                
+
                 const tags = [...new Set([...recipe.category, ...recipe.type])];
-                
+                const icon = getRecipeIcon(recipe);
+
                 card.innerHTML = `
-                    <h3 class="recipe-title">${recipe.name}</h3>
-                    <span class="recipe-author">${recipe.author}</span>
-                    <p>${recipe.ingredients.length} ingredients • ${recipe.instructions.length} steps</p>
-                    <div class="recipe-tags">
-                        ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    <div class="recipe-card-header">
+                        ${icon}
+                    </div>
+                    <div class="recipe-card-body">
+                        <h3 class="recipe-title">${recipe.name}</h3>
+                        <span class="recipe-author">👨‍🍳 ${recipe.author}</span>
+                        <div class="recipe-meta">
+                            <span>📋 ${recipe.ingredients.length} ingredients</span>
+                            <span>⏱️ ${recipe.instructions.length} steps</span>
+                        </div>
+                        <div class="recipe-tags">
+                            ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
                     </div>
                 `;
-                
-                grid.appendChild(card);
+
+                gridContainer.appendChild(card);
             });
+
+            grid.appendChild(gridContainer);
         }
-        
+
         function showRecipeDetail(index) {
             const recipe = filteredRecipes[index];
-            
-            // Set page title to recipe name for unique discussion
             document.title = `${recipe.name} - Recipe`;
-            
+
             const detail = document.getElementById('recipeDetail');
-            
+
             const ingredientsHTML = recipe.ingredients.map(ing =>
                 `<tr>
                     <td>${ing.item}</td>
@@ -615,16 +801,16 @@
                     <td>${ing.unit}</td>
                 </tr>`
             ).join('');
-            
+
             const instructionsHTML = recipe.instructions.map(inst =>
                 `<li>${inst}</li>`
             ).join('');
-            
+
             detail.innerHTML = `
-                <button class="close-btn" onclick="closeRecipeDetail()">Close</button>
+                <button class="close-btn" onclick="closeRecipeDetail()">✕ Close</button>
                 <h2>${recipe.name}</h2>
-                <span class="recipe-author">By ${recipe.author}</span>
-                
+                <span class="recipe-author">👨‍🍳 By ${recipe.author}</span>
+
                 <div class="recipe-section">
                     <h3>Ingredients</h3>
                     <table class="ingredients-table">
@@ -640,14 +826,14 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="recipe-section">
                     <h3>Instructions</h3>
                     <ol class="instructions">
                         ${instructionsHTML}
                     </ol>
                 </div>
-                
+
                 <div class="recipe-section">
                     <h3>Discussion</h3>
                     <script src="https://giscus.app/client.js"
@@ -667,14 +853,12 @@
                     <\/script>
                 </div>
             `;
-            
+
             detail.classList.add('active');
             detail.scrollIntoView({ behavior: 'smooth' });
-            // Reload Giscus for this recipe
+
             const existingScript = document.querySelector('script[src*="giscus.app"]');
-            if (existingScript) {
-                existingScript.remove();
-            }
+            if (existingScript) existingScript.remove();
 
             const newScript = document.createElement('script');
             newScript.src = 'https://giscus.app/client.js';
@@ -691,21 +875,16 @@
             newScript.setAttribute('data-lang', 'en');
             newScript.setAttribute('crossorigin', 'anonymous');
             newScript.async = true;
-
             document.body.appendChild(newScript);
         }
-        
-        // Function to close recipe detail
+
         function closeRecipeDetail() {
             const detail = document.getElementById('recipeDetail');
             detail.classList.remove('active');
-            // Restore original page title
             document.title = 'Recipe Collection - Pierre & Adam';
-            // Reload Giscus for this recipe
+
             const existingScript = document.querySelector('script[src*="giscus.app"]');
-            if (existingScript) {
-                existingScript.remove();
-            }
+            if (existingScript) existingScript.remove();
 
             const newScript = document.createElement('script');
             newScript.src = 'https://giscus.app/client.js';
@@ -722,28 +901,23 @@
             newScript.setAttribute('data-lang', 'en');
             newScript.setAttribute('crossorigin', 'anonymous');
             newScript.async = true;
-
             document.body.appendChild(newScript);
         }
-        
-        // Update filter dropdowns
+
         function updateFilters() {
             const categorySelect = document.getElementById('categoryFilter');
             const typeSelect = document.getElementById('typeFilter');
-            
-            // Clear existing options except "All"
+
             categorySelect.innerHTML = '<option value="">All Categories</option>';
             typeSelect.innerHTML = '<option value="">All Types</option>';
-            
-            // Add categories
+
             Array.from(allCategories).sort().forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat;
                 option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
                 categorySelect.appendChild(option);
             });
-            
-            // Add types
+
             Array.from(allTypes).sort().forEach(type => {
                 const option = document.createElement('option');
                 option.value = type;
@@ -751,67 +925,61 @@
                 typeSelect.appendChild(option);
             });
         }
-        
-        // Filter function
+
         function filterRecipes() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const categoryFilter = document.getElementById('categoryFilter').value;
             const typeFilter = document.getElementById('typeFilter').value;
             const authorFilter = document.getElementById('authorFilter').value;
-            
+
             filteredRecipes = allRecipes.filter(recipe => {
                 const matchesSearch = recipe.name.toLowerCase().includes(searchTerm) ||
                                      recipe.ingredients.some(ing => ing.item.toLowerCase().includes(searchTerm));
                 const matchesCategory = !categoryFilter || recipe.category.includes(categoryFilter);
                 const matchesType = !typeFilter || recipe.type.includes(typeFilter);
                 const matchesAuthor = !authorFilter || recipe.author === authorFilter;
-                
+
                 return matchesSearch && matchesCategory && matchesType && matchesAuthor;
             });
-            
+
             displayRecipes(filteredRecipes);
         }
-        
-        // Load recipes for a specific author
+
         async function loadAuthorRecipes(author) {
-            // Update button states
             document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(author + 'Btn').classList.add('active');
-            
-            // Show loading state
-            const originalText = document.getElementById(author + 'Btn').innerHTML;
-            document.getElementById(author + 'Btn').innerHTML = `Loading...<span class="loading-spinner"></span>`;
-            
+
+            const btn = document.getElementById(author + 'Btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<span>Loading...<span class="loading-spinner"></span></span>`;
+
             try {
                 const response = await fetch(`${author}-recipes.txt`);
                 if (!response.ok) throw new Error('File not found');
-                
+
                 const content = await response.text();
                 const authorName = author.charAt(0).toUpperCase() + author.slice(1);
                 const newRecipes = parseRecipeFile(content, authorName);
-                
-                // Remove recipes from this author and add new ones
+
                 allRecipes = allRecipes.filter(r => r.author !== authorName);
                 allRecipes.push(...newRecipes);
-                
-                // Update categories and types
+
                 allCategories.clear();
                 allTypes.clear();
                 currentAuthors.clear();
-                
+
                 allRecipes.forEach(recipe => {
                     recipe.category.forEach(cat => allCategories.add(cat));
                     recipe.type.forEach(type => allTypes.add(type));
                     currentAuthors.add(recipe.author);
                 });
-                
+
                 updateFilters();
                 filteredRecipes = allRecipes.filter(r => r.author === authorName);
                 displayRecipes(filteredRecipes);
-                
-                // Update subtitle
+
                 document.querySelector('.subtitle').textContent = `${authorName}'s Recipes • ${newRecipes.length} recipes loaded`;
-                
+
             } catch (error) {
                 document.getElementById('recipeGrid').innerHTML = `
                     <div class="error">
@@ -820,24 +988,21 @@
                     </div>
                 `;
             } finally {
-                document.getElementById(author + 'Btn').innerHTML = originalText;
+                btn.innerHTML = originalHTML;
             }
         }
-        
-        // Load all recipes from both authors
+
         async function loadAllRecipes() {
-            // Update button states
             document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('allBtn').classList.add('active');
-            
-            // Show loading state
-            const originalText = document.getElementById('allBtn').innerHTML;
-            document.getElementById('allBtn').innerHTML = `Loading...<span class="loading-spinner"></span>`;
-            
+
+            const btn = document.getElementById('allBtn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<span>Loading...<span class="loading-spinner"></span></span>`;
+
             allRecipes = [];
             let loadedCount = 0;
-            
-            // Try to load both files
+
             for (const author of ['pierre', 'adam']) {
                 try {
                     const response = await fetch(`${author}-recipes.txt`);
@@ -852,24 +1017,22 @@
                     console.log(`Could not load ${author}-recipes.txt`);
                 }
             }
-            
+
             if (loadedCount > 0) {
-                // Update categories and types
                 allCategories.clear();
                 allTypes.clear();
                 currentAuthors.clear();
-                
+
                 allRecipes.forEach(recipe => {
                     recipe.category.forEach(cat => allCategories.add(cat));
                     recipe.type.forEach(type => allTypes.add(type));
                     currentAuthors.add(recipe.author);
                 });
-                
+
                 updateFilters();
                 filteredRecipes = [...allRecipes];
                 displayRecipes(filteredRecipes);
-                
-                // Update subtitle
+
                 document.querySelector('.subtitle').textContent = `All Recipes • ${allRecipes.length} recipes from ${loadedCount} authors`;
             } else {
                 document.getElementById('recipeGrid').innerHTML = `
@@ -879,67 +1042,57 @@
                     </div>
                 `;
             }
-            
-            document.getElementById('allBtn').innerHTML = originalText;
+
+            btn.innerHTML = originalHTML;
         }
-        
-        // File input handler
+
         document.getElementById('fileInput').addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
-            // Prompt for author name
+
             const author = prompt('Enter the author name for these recipes:', 'Guest');
             if (!author) return;
-            
+
             try {
                 const content = await file.text();
                 const newRecipes = parseRecipeFile(content, author);
-                
-                // Add to all recipes
+
                 allRecipes.push(...newRecipes);
-                
-                // Update everything
+
                 allCategories.clear();
                 allTypes.clear();
                 currentAuthors.clear();
-                
+
                 allRecipes.forEach(recipe => {
                     recipe.category.forEach(cat => allCategories.add(cat));
                     recipe.type.forEach(type => allTypes.add(type));
                     currentAuthors.add(recipe.author);
                 });
-                
+
                 updateFilters();
                 filteredRecipes = [...allRecipes];
                 displayRecipes(filteredRecipes);
-                
-                // Clear active buttons
+
                 document.querySelectorAll('.author-btn').forEach(btn => btn.classList.remove('active'));
-                
-                // Update subtitle
                 document.querySelector('.subtitle').textContent = `${allRecipes.length} recipes loaded from ${currentAuthors.size} authors`;
-                
+
             } catch (error) {
                 alert('Error loading file: ' + error.message);
             }
         });
-        
-        // Event listeners for filters
+
         document.getElementById('searchInput').addEventListener('input', filterRecipes);
         document.getElementById('categoryFilter').addEventListener('change', filterRecipes);
         document.getElementById('typeFilter').addEventListener('change', filterRecipes);
         document.getElementById('authorFilter').addEventListener('change', filterRecipes);
-        
-        // Auto-load on page load if deployed
+
         if (window.location.protocol !== 'file:') {
-            // Try to load all recipes automatically
             setTimeout(loadAllRecipes, 100);
         }
     </script>
-    <!-- ADD THE COMMENTS SECTION HERE - INSIDE THE CONTAINER -->
-    <div style="margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.95); border-radius: 20px;">
-        <h2 style="margin-bottom: 20px;">Discussion</h2>
+
+    <div style="margin-top: 50px; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+        <h2 style="margin-bottom: 24px; color: #2d3436; font-weight: 700;">Discussion</h2>
         <script src="https://giscus.app/client.js"
                 data-repo="p-archamb/recipes"
                 data-repo-id="R_kgDOP3y3hA"
@@ -956,6 +1109,6 @@
                 async>
         </script>
     </div>
-    
+
 </body>
 </html>
